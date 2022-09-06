@@ -20,7 +20,12 @@ struct InlineMarkdownConfiguration {
                             .font(.system(.body, design: .monospaced))
                     }
                 } else {
-                    return result = result + component.text.apply(attributes: component.attributes)
+                    return result = result + component.text.apply(
+                        strong: strong,
+                        emphasis: emphasis,
+                        strikethrough: strikethrough,
+                        attributes: component.attributes
+                    )
                 }
             }
         }

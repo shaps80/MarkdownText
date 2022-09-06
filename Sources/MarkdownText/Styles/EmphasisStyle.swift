@@ -12,7 +12,7 @@ public struct EmphasisMarkdownConfiguration {
 public struct DefaultEmphasisMarkdownStyle: EmphasisMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        configuration.label.bold()
+        configuration.label.italic()
     }
 }
 

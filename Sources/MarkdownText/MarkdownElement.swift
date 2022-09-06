@@ -30,24 +30,24 @@ public struct UnorderedItem {
     var content: Text
 }
 
-public struct Component {
-    public var text: Text
-    public var attributes: Attribute = []
+internal struct Component {
+    var text: Text
+    var attributes: Attribute = []
 }
 
-public struct Attribute: OptionSet, CustomStringConvertible {
-    public let rawValue: Int
-    public init(rawValue: Int) {
+internal struct Attribute: OptionSet, CustomStringConvertible {
+    let rawValue: Int
+    init(rawValue: Int) {
         self.rawValue = rawValue
     }
 
-    public static let bold = Attribute(rawValue: 1 << 0)
-    public static let italic = Attribute(rawValue: 1 << 1)
-    public static let strikethrough = Attribute(rawValue: 1 << 2)
-    public static let code = Attribute(rawValue: 1 << 3)
-    public static let link = Attribute(rawValue: 1 << 4)
+    static let bold = Attribute(rawValue: 1 << 0)
+    static let italic = Attribute(rawValue: 1 << 1)
+    static let strikethrough = Attribute(rawValue: 1 << 2)
+    static let code = Attribute(rawValue: 1 << 3)
+    static let link = Attribute(rawValue: 1 << 4)
 
-    public var description: String {
+    var description: String {
         var elements: [String] = []
         if contains(.bold) { elements.append("bold") }
         if contains(.italic) { elements.append("italic") }
@@ -58,20 +58,20 @@ public struct Attribute: OptionSet, CustomStringConvertible {
     }
 }
 
-public extension Text {
-    func apply(attributes: Attribute) -> Self {
+internal extension Text {
+    func apply(strong: StrongMarkdownStyle, emphasis: EmphasisMarkdownStyle, strikethrough: StrikethroughMarkdownStyle, attributes: Attribute) -> Self {
         var text = self
 
         if attributes.contains(.bold) {
-            text = text.bold()
+            text = strong.makeBody(configuration: .init(label: text))
         }
 
         if attributes.contains(.italic) {
-            text = text.italic()
+            text = emphasis.makeBody(configuration: .init(label: text))
         }
 
         if attributes.contains(.strikethrough) {
-            text = text.strikethrough()
+            text = strikethrough.makeBody(configuration: .init(label: text))
         }
 
         return text

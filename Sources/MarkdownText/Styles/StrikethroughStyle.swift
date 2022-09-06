@@ -12,7 +12,7 @@ public struct StrikethroughMarkdownConfiguration {
 public struct DefaultStrikethroughMarkdownStyle: StrikethroughMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        configuration.label.bold()
+        configuration.label.strikethrough()
     }
 }
 
