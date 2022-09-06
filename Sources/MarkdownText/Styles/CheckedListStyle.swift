@@ -36,7 +36,7 @@ public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: C
             VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
-                        items[index].content
+                        items[index].label
                     } icon: {
                         Group {
                             if items[index].isChecked {

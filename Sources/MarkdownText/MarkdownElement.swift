@@ -18,16 +18,16 @@ enum MarkdownElement {
 
 public struct ChecklistItem {
     var isChecked: Bool
-    var content: Text
+    var label: Text
 }
 
 public struct OrderedItem {
     public var order: Int?
-    public var content: Text
+    public var label: Text
 }
 
 public struct UnorderedItem {
-    var content: Text
+    var label: Text
 }
 
 internal struct Component {

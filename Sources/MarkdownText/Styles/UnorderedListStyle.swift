@@ -32,7 +32,7 @@ public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
             VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
-                        items[index].content
+                        items[index].label
                     } icon: {
                         bullet
                             .frame(minWidth: reservedWidth)

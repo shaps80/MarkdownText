@@ -41,7 +41,7 @@ struct TextBuilder: MarkupWalker {
             .map(\.plainText)
 
         let items = zip(texts.indices, texts).map {
-            OrderedItem(order: $0.0 + 1, content: .init($0.1))
+            OrderedItem(order: $0.0 + 1, label: .init($0.1))
         }
 
         elements.append(.orderedList(.init(items: items)))
@@ -61,13 +61,13 @@ struct TextBuilder: MarkupWalker {
         if listItems.contains(where: { $0.checkbox != nil }) {
             let checkboxes = listItems.compactMap(\.checkbox)
             let items = zip(checkboxes, texts).map {
-                ChecklistItem(isChecked: $0.0 == .checked, content: .init($0.1))
+                ChecklistItem(isChecked: $0.0 == .checked, label: .init($0.1))
             }
 
             elements.append(.checkedList(.init(items: items)))
         } else {
             let items = texts.map {
-                UnorderedItem(content: .init($0))
+                UnorderedItem(label: .init($0))
             }
 
             elements.append(.unorderedList(.init(items: items)))
