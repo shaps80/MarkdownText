@@ -1,7 +1,7 @@
 import SwiftUI
 import Markdown
 
-struct NewTextBuilder: MarkupWalker {
+struct MarkdownTextBuilder: MarkupWalker {
     enum ListType {
         case unordered
         case ordered
