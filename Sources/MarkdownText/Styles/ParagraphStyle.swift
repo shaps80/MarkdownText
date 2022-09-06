@@ -17,8 +17,7 @@ public struct AnyParagraphMarkdownStyle: ParagraphMarkdownStyle {
 }
 
 public struct ParagraphMarkdownConfiguration {
-    public let inline: InlineMarkdownConfiguration
-    public var label: some View { inline.label }
+    let inline: InlineMarkdownConfiguration
 }
 
 public struct NoParagraphMarkdownStyle: ParagraphMarkdownStyle {
@@ -33,6 +32,15 @@ public extension ParagraphMarkdownStyle where Self == NoParagraphMarkdownStyle {
 }
 
 public struct DefaultParagraphMarkdownStyle: ParagraphMarkdownStyle {
+    struct Content: View {
+        let configuration: InlineMarkdownConfiguration
+
+        var body: some View {
+            InlineMarkdownStyle()
+                .makeBody(configuration: configuration)
+        }
+    }
+
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.inline.label

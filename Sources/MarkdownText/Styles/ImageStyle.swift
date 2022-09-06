@@ -6,10 +6,13 @@ public protocol ImageMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyImageMarkdownStyle {
+public struct AnyImageMarkdownStyle: ImageMarkdownStyle {
     var label: (ImageMarkdownConfiguration) -> AnyView
     init<S: ImageMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -71,7 +74,7 @@ private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyImageMarkdownStyle(.hidden)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownImageStyle: AnyImageMarkdownStyle {
         get { self[ImageMarkdownEnvironmentKey.self] }
         set { self[ImageMarkdownEnvironmentKey.self] = newValue }

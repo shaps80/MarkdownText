@@ -6,10 +6,13 @@ public protocol ThematicBreakMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyThematicMarkdownStyle {
+public struct AnyThematicMarkdownStyle: ThematicBreakMarkdownStyle {
     var label: (ThematicMarkdownConfiguration) -> AnyView
     init<S: ThematicBreakMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -43,7 +46,7 @@ private struct MarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyThematicMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownThematicBreakStyle: AnyThematicMarkdownStyle {
         get { self[MarkdownEnvironmentKey.self] }
         set { self[MarkdownEnvironmentKey.self] = newValue }

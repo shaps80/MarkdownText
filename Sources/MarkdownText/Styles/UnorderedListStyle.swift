@@ -6,10 +6,13 @@ public protocol UnorderedListMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyUnorderedListMarkdownStyle {
+public struct AnyUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
     var label: (UnorderedListMarkdownConfiguration) -> AnyView
     init<S: UnorderedListMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -65,7 +68,7 @@ private struct UnorderedListMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyUnorderedListMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownUnorderedListStyle: AnyUnorderedListMarkdownStyle {
         get { self[UnorderedListMarkdownEnvironmentKey.self] }
         set { self[UnorderedListMarkdownEnvironmentKey.self] = newValue }

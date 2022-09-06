@@ -6,10 +6,13 @@ public protocol CheckedListMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyCheckedListMarkdownStyle {
+public struct AnyCheckedListMarkdownStyle: CheckedListMarkdownStyle {
     var label: (CheckedListMarkdownConfiguration) -> AnyView
     init<S: CheckedListMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -82,7 +85,7 @@ private struct CheckedListMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyCheckedListMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownChecklistStyle: AnyCheckedListMarkdownStyle {
         get { self[CheckedListMarkdownEnvironmentKey.self] }
         set { self[CheckedListMarkdownEnvironmentKey.self] = newValue }

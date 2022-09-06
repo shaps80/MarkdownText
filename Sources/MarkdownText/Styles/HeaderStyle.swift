@@ -6,16 +6,20 @@ public protocol HeaderMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyHeaderStyle {
+public struct AnyHeaderStyle: HeaderMarkdownStyle {
     var label: (HeaderMarkdownConfiguration) -> AnyView
     init<S: HeaderMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
 public struct HeaderMarkdownConfiguration {
     public let level: Int
-    public let inline: InlineMarkdownConfiguration
+    let inline: InlineMarkdownConfiguration
+    public var label: some View { inline.label }
 
     public var preferredStyle: Font.TextStyle {
         switch level {
@@ -52,7 +56,7 @@ public extension HeaderMarkdownStyle where Self == NoHeaderMarkdownStyle {
 public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.inline.label
+        configuration.label
             .font(.system(configuration.preferredStyle).weight(.bold))
     }
 }
@@ -65,7 +69,7 @@ private struct HeaderMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyHeaderStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownHeadingStyle: AnyHeaderStyle {
         get { self[HeaderMarkdownEnvironmentKey.self] }
         set { self[HeaderMarkdownEnvironmentKey.self] = newValue }

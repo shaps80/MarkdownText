@@ -6,10 +6,13 @@ public protocol QuoteMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyQuoteMarkdownStyle {
+public struct AnyQuoteMarkdownStyle: QuoteMarkdownStyle {
     var label: (QuoteMarkdownConfiguration) -> AnyView
     init<S: QuoteMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -44,7 +47,7 @@ private struct QuoteMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyQuoteMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownQuoteStyle: AnyQuoteMarkdownStyle {
         get { self[QuoteMarkdownEnvironmentKey.self] }
         set { self[QuoteMarkdownEnvironmentKey.self] = newValue }

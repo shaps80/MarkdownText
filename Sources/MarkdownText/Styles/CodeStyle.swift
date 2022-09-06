@@ -6,10 +6,13 @@ public protocol CodeMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyCodeMarkdownStyle {
+public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
     var label: (CodeMarkdownConfiguration) -> AnyView
     init<S: CodeMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -88,7 +91,7 @@ private struct CodeMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyCodeMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownCodeStyle: AnyCodeMarkdownStyle {
         get { self[CodeMarkdownEnvironmentKey.self] }
         set { self[CodeMarkdownEnvironmentKey.self] = newValue }

@@ -6,10 +6,13 @@ public protocol OrderedListMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyOrderedListMarkdownStyle {
+public struct AnyOrderedListMarkdownStyle: OrderedListMarkdownStyle {
     var label: (OrderedListMarkdownConfiguration) -> AnyView
     init<S: OrderedListMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -63,7 +66,7 @@ private struct OrderedListMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyOrderedListMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownOrderedListStyle: AnyOrderedListMarkdownStyle {
         get { self[OrderedListMarkdownEnvironmentKey.self] }
         set { self[OrderedListMarkdownEnvironmentKey.self] = newValue }

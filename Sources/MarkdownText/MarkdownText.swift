@@ -12,35 +12,35 @@ private struct MarkdownContent: View {
     @Environment(\.markdownUnorderedListStyle) private var unorderedStyle
     @Environment(\.markdownChecklistStyle) private var checkedStyle
     @Environment(\.markdownImageStyle) private var imageStyle
-    @Environment(\.markdownInlineStyle) private var inlineStyle
+    private var inlineStyle = InlineMarkdownStyle()
 
     private var content: some View {
         ForEach(elements.indices, id: \.self) { index in
             switch elements[index] {
             case let .header(config):
-                headerStyle.label(config)
+                headerStyle.makeBody(configuration: config)
             case let .paragraph(config):
-                paragraphStyle.label(config)
+                paragraphStyle.makeBody(configuration: config)
             case let .inline(config):
-                inlineStyle.label(config)
+                inlineStyle.makeBody(configuration: config)
             case let .quote(config):
-                quoteStyle.label(config)
+                quoteStyle.makeBody(configuration: config)
             case let .orderedList(config):
-                orderedStyle.label(config)
+                orderedStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
             case let .unorderedList(config):
-                unorderedStyle.label(config)
+                unorderedStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
             case let .checkedList(config):
-                checkedStyle.label(config)
+                checkedStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
             case let .code(config):
-                codeStyle.label(config)
+                codeStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
             case let .thematicBreak(config):
-                thematicBreak.label(config)
+                thematicBreak.makeBody(configuration: config)
             case let .image(config):
-                imageStyle.label(config)
+                imageStyle.makeBody(configuration: config)
             }
         }
     }
@@ -56,6 +56,12 @@ private struct MarkdownContent: View {
         : alignment == .trailing
             ? .trailing
             : .center
+    }
+
+    init(elements: [MarkdownElement], paragraphSpacing: CGFloat?, isLazy: Bool) {
+        self.elements = elements
+        self.paragraphSpacing = paragraphSpacing
+        self.isLazy = isLazy
     }
 
     public var body: some View {
