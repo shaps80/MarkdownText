@@ -14,21 +14,6 @@ internal struct AnyInlineMarkdownStyle {
 }
 
 public struct InlineMarkdownConfiguration {
-    @ViewBuilder
-    public func label(for component: Component) -> Text {
-        component.text.apply(attributes: component.attributes)
-    }
-
-    public var label: Text {
-        components.reduce(into: Text("")) { result, component in
-            result = result + label(for: component)
-        }
-    }
-
-    public let components: [Component]
-}
-
-public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
     struct Content: View {
         @Environment(\.font) private var font
 
@@ -51,10 +36,17 @@ public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
         }
     }
 
+    public let components: [Component]
+    public var label: some View {
+        Content(components: components)
+    }
+}
+
+public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
     public init() { }
 
     public func makeBody(configuration: Configuration) -> some View {
-        Content(components: configuration.components)
+        configuration.label
     }
 }
 

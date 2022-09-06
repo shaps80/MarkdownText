@@ -19,7 +19,7 @@ public struct CodeMarkdownConfiguration {
     public let language: String?
 
     init(code: String, language: String?) {
-        self.code = code
+        self.code = code.trimmingCharacters(in: .newlines)
         self.language = language
         self.label = Text(code)
     }

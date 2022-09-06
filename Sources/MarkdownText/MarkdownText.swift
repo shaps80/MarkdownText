@@ -36,6 +36,7 @@ private struct MarkdownContent: View {
                     .environment(\.lineSpacing, 5)
             case let .code(config):
                 codeStyle.label(config)
+                    .environment(\.lineSpacing, 5)
             case let .thematicBreak(config):
                 thematicBreak.label(config)
             case let .image(config):
@@ -75,7 +76,7 @@ public struct LazyMarkdownText: View, MarkupWalker {
     private let content: MarkdownContent
 
     public init(_ markdown: String, paragraphSpacing: CGFloat? = 20) {
-        let elements = TextBuilder(
+        let elements = NewTextBuilder(
             document: Document(parsing: markdown)
         ).elements
 
@@ -91,7 +92,7 @@ public struct MarkdownText: View, MarkupWalker {
     private let content: MarkdownContent
 
     public init(_ markdown: String, paragraphSpacing: CGFloat? = 20) {
-        let elements = TextBuilder(
+        let elements = NewTextBuilder(
             document: Document(parsing: markdown, options: [.parseSymbolLinks, .parseSymbolLinks])
         ).elements
 

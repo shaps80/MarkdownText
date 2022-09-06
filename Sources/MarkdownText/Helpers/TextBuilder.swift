@@ -11,7 +11,7 @@ struct TextBuilder: MarkupWalker {
     }
 
     mutating func visitHeading(_ markdown: Heading) {
-        elements.append(.header(.init(label: Text(markdown.plainText), level: markdown.level)))
+//        elements.append(.header(.init(label: Text(markdown.plainText), level: markdown.level)))
         components.removeAll()
     }
 

@@ -35,7 +35,7 @@ public struct Component {
     public var attributes: Attribute = []
 }
 
-public struct Attribute: OptionSet {
+public struct Attribute: OptionSet, CustomStringConvertible {
     public let rawValue: Int
     public init(rawValue: Int) {
         self.rawValue = rawValue
@@ -46,6 +46,16 @@ public struct Attribute: OptionSet {
     public static let strikethrough = Attribute(rawValue: 1 << 2)
     public static let code = Attribute(rawValue: 1 << 3)
     public static let link = Attribute(rawValue: 1 << 4)
+
+    public var description: String {
+        var elements: [String] = []
+        if contains(.bold) { elements.append("bold") }
+        if contains(.italic) { elements.append("italic") }
+        if contains(.strikethrough) { elements.append("strikethrough") }
+        if contains(.code) { elements.append("code") }
+        if contains(.link) { elements.append("link") }
+        return elements.joined(separator: ", ")
+    }
 }
 
 public extension Text {

@@ -14,13 +14,13 @@ internal struct AnyQuoteMarkdownStyle {
 }
 
 public struct QuoteMarkdownConfiguration {
-    public let label: Text
+    public let paragraph: ParagraphMarkdownConfiguration
 }
 
 public struct DefaultQuoteMarkdownStyle: QuoteMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        configuration.paragraph.label
     }
 }
 

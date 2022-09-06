@@ -14,8 +14,8 @@ internal struct AnyHeaderStyle {
 }
 
 public struct HeaderMarkdownConfiguration {
-    public let label: Text
     public let level: Int
+    public let inline: InlineMarkdownConfiguration
 
     public var preferredStyle: Font.TextStyle {
         switch level {
@@ -52,7 +52,7 @@ public extension HeaderMarkdownStyle where Self == NoHeaderMarkdownStyle {
 public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        configuration.inline.label
             .font(.system(configuration.preferredStyle).weight(.bold))
     }
 }
