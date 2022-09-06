@@ -17,17 +17,17 @@ enum MarkdownElement {
 }
 
 public struct ChecklistItem {
-    var isChecked: Bool
-    var label: Text
+    public var isChecked: Bool
+    public var paragraph: ParagraphMarkdownConfiguration
 }
 
 public struct OrderedItem {
     public var order: Int?
-    public var label: Text
+    public var paragraph: ParagraphMarkdownConfiguration
 }
 
 public struct UnorderedItem {
-    var label: Text
+    public var paragraph: ParagraphMarkdownConfiguration
 }
 
 internal struct Component {

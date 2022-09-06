@@ -27,6 +27,7 @@ public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: C
     struct Content: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.lineSpacing) private var spacing
+        @Environment(\.markdownParagraphStyle) private var style
 
         let unchecked: Unchecked
         let checked: Checked
@@ -36,7 +37,7 @@ public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: C
             VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
-                        items[index].label
+                        style.makeBody(configuration: items[index].paragraph)
                     } icon: {
                         Group {
                             if items[index].isChecked {

@@ -32,46 +32,46 @@ struct TextBuilder: MarkupWalker {
     }
 
     mutating func visitOrderedList(_ markdown: OrderedList) {
-        let texts = markdown.children
-            .compactMap { $0 as? Markdown.ListItem }
-            .flatMap(\.children)
-            .compactMap { $0 as? Paragraph }
-            .flatMap(\.children)
-            .compactMap { $0 as? Markdown.Text }
-            .map(\.plainText)
-
-        let items = zip(texts.indices, texts).map {
-            OrderedItem(order: $0.0 + 1, label: .init($0.1))
-        }
-
-        elements.append(.orderedList(.init(items: items)))
+//        let texts = markdown.children
+//            .compactMap { $0 as? Markdown.ListItem }
+//            .flatMap(\.children)
+//            .compactMap { $0 as? Paragraph }
+//            .flatMap(\.children)
+//            .compactMap { $0 as? Markdown.Text }
+//            .map(\.plainText)
+//
+//        let items = zip(texts.indices, texts).map {
+//            OrderedItem(order: $0.0 + 1, label: .init($0.1))
+//        }
+//
+//        elements.append(.orderedList(.init(items: items)))
     }
 
     mutating func visitUnorderedList(_ markdown: UnorderedList) {
-        let listItems = markdown.children
-            .compactMap { $0 as? Markdown.ListItem }
-
-        let texts = listItems
-            .flatMap(\.children)
-            .compactMap { $0 as? Paragraph }
-            .flatMap(\.children)
-            .compactMap { $0 as? Markdown.Text }
-            .map(\.plainText)
-
-        if listItems.contains(where: { $0.checkbox != nil }) {
-            let checkboxes = listItems.compactMap(\.checkbox)
-            let items = zip(checkboxes, texts).map {
-                ChecklistItem(isChecked: $0.0 == .checked, label: .init($0.1))
-            }
-
-            elements.append(.checkedList(.init(items: items)))
-        } else {
-            let items = texts.map {
-                UnorderedItem(label: .init($0))
-            }
-
-            elements.append(.unorderedList(.init(items: items)))
-        }
+//        let listItems = markdown.children
+//            .compactMap { $0 as? Markdown.ListItem }
+//
+//        let texts = listItems
+//            .flatMap(\.children)
+//            .compactMap { $0 as? Paragraph }
+//            .flatMap(\.children)
+//            .compactMap { $0 as? Markdown.Text }
+//            .map(\.plainText)
+//
+//        if listItems.contains(where: { $0.checkbox != nil }) {
+//            let checkboxes = listItems.compactMap(\.checkbox)
+//            let items = zip(checkboxes, texts).map {
+//                ChecklistItem(isChecked: $0.0 == .checked, label: .init($0.1))
+//            }
+//
+//            elements.append(.checkedList(.init(items: items)))
+//        } else {
+//            let items = texts.map {
+//                UnorderedItem(label: .init($0))
+//            }
+//
+//            elements.append(.unorderedList(.init(items: items)))
+//        }
     }
 
     mutating func visitListItem(_: Markdown.ListItem) { }

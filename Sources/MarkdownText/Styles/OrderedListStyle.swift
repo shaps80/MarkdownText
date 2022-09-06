@@ -24,6 +24,7 @@ public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
     struct Content: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.lineSpacing) private var spacing
+        @Environment(\.markdownParagraphStyle) private var style
 
         var items: [OrderedItem]
 
@@ -31,9 +32,10 @@ public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
             VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
-                        items[index].label
+                        style.makeBody(configuration: items[index].paragraph)
                     } icon: {
-                        Text("\(index + 1).")
+                        let order = items[index].order ?? (index + 1)
+                        Text("\(order).")
                             .frame(minWidth: reservedWidth)
                     }
                 }

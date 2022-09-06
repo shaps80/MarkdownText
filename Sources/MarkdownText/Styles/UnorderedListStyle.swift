@@ -24,6 +24,7 @@ public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
     struct Content: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.lineSpacing) private var spacing
+        @Environment(\.markdownParagraphStyle) private var style
 
         var bullet: Text
         var items: [UnorderedItem]
@@ -32,7 +33,7 @@ public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
             VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
-                        items[index].label
+                        style.makeBody(configuration: items[index].paragraph)
                     } icon: {
                         bullet
                             .frame(minWidth: reservedWidth)
