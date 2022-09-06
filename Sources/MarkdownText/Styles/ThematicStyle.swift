@@ -1,6 +1,6 @@
 import SwiftUI
 
-public protocol ThematicMarkdownStyle {
+public protocol ThematicBreakMarkdownStyle {
     associatedtype Body: View
     typealias Configuration = ThematicMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
@@ -8,7 +8,7 @@ public protocol ThematicMarkdownStyle {
 
 internal struct AnyThematicMarkdownStyle {
     var label: (ThematicMarkdownConfiguration) -> AnyView
-    init<S: ThematicMarkdownStyle>(_ style: S) {
+    init<S: ThematicBreakMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
 }
@@ -17,7 +17,7 @@ public struct ThematicMarkdownConfiguration {
     public let label = Divider()
 }
 
-public struct DefaultThematicMarkdownStyle: ThematicMarkdownStyle {
+public struct DefaultThematicMarkdownStyle: ThematicBreakMarkdownStyle {
     var thickness: CGFloat = 1
     var color: Color?
 
@@ -32,20 +32,20 @@ public struct DefaultThematicMarkdownStyle: ThematicMarkdownStyle {
     }
 }
 
-public struct NoThematicMarkdownStyle: ThematicMarkdownStyle {
+public struct NoThematicMarkdownStyle: ThematicBreakMarkdownStyle {
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
 }
 
-public extension ThematicMarkdownStyle where Self == DefaultThematicMarkdownStyle {
+public extension ThematicBreakMarkdownStyle where Self == DefaultThematicMarkdownStyle {
     static var `default`: Self { .init() }
-    static func `default`(thickness: CGFloat = 1, color: Color = .init(.separator)) -> Self {
+    static func rounded(thickness: CGFloat = 1, color: Color = .init(.separator)) -> Self {
         .init(thickness: thickness, color: color)
     }
 }
 
-public extension ThematicMarkdownStyle where Self == NoThematicMarkdownStyle {
+public extension ThematicBreakMarkdownStyle where Self == NoThematicMarkdownStyle {
     static var hidden: Self { .init() }
 }
 
@@ -54,14 +54,14 @@ private struct MarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var thematicMarkdownStyle: AnyThematicMarkdownStyle {
+    var markdownThematicBreakStyle: AnyThematicMarkdownStyle {
         get { self[MarkdownEnvironmentKey.self] }
         set { self[MarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func thematicBreakStyle<S>(_ style: S) -> some View where S: ThematicMarkdownStyle {
-        environment(\.thematicMarkdownStyle, AnyThematicMarkdownStyle(style))
+    func markdownThematicBreakStyle<S>(_ style: S) -> some View where S: ThematicBreakMarkdownStyle {
+        environment(\.markdownThematicBreakStyle, AnyThematicMarkdownStyle(style))
     }
 }

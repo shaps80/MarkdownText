@@ -19,21 +19,20 @@ public struct HeaderMarkdownConfiguration {
 
     public var preferredStyle: Font.TextStyle {
         switch level {
-        case 1: return .largeTitle
-        case 2: return .title
-        case 3:
+        case 1: return .title
+        case 2:
             if #available(iOS 14.0, *) {
                 return .title2
             } else {
                 return .title
             }
-        case 4:
+        case 3:
             if #available(iOS 14.0, *) {
                 return .title3
             } else {
                 return .title
             }
-        case 5: return .headline
+        case 4: return .headline
         default: return .subheadline
         }
     }
@@ -52,7 +51,7 @@ public extension HeaderMarkdownStyle where Self == NoHeaderMarkdownStyle {
 public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(configuration.preferredStyle))
+            .font(.system(configuration.preferredStyle).weight(.bold))
     }
 }
 
@@ -65,14 +64,14 @@ private struct HeaderMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var headerMarkdownStyle: AnyHeaderStyle {
+    var markdownHeadingStyle: AnyHeaderStyle {
         get { self[HeaderMarkdownEnvironmentKey.self] }
         set { self[HeaderMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func headerStyle<S>(_ style: S) -> some View where S: HeaderMarkdownStyle {
-        environment(\.headerMarkdownStyle, AnyHeaderStyle(style))
+    func markdownHeadingStyle<S>(_ style: S) -> some View where S: HeaderMarkdownStyle {
+        environment(\.markdownHeadingStyle, AnyHeaderStyle(style))
     }
 }

@@ -17,39 +17,31 @@ public struct CheckedListMarkdownConfiguration {
     public let items: [ChecklistItem]
 }
 
-public struct DefaultCheckedListMarkdownStyle: CheckedListMarkdownStyle {
-    let unchecked: AnyView
-    let checked: AnyView
+public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: CheckedListMarkdownStyle {
+    let unchecked: Unchecked
+    let checked: Checked
 
     struct Content: View {
-        @Backport.ScaledMetric(wrappedValue: 30) private var padding
-        @Backport.ScaledMetric(wrappedValue: 6) private var spacing
+        @Environment(\.lineSpacing) private var lineSpacing
 
-        let unchecked: AnyView
-        let checked: AnyView
+        let unchecked: Unchecked
+        let checked: Checked
         let items: [ChecklistItem]
 
-        @ViewBuilder
-        private func bullet(isChecked: Bool) -> some View {
-            if isChecked {
-                checked
-            } else {
-                unchecked
-            }
-        }
-
         var body: some View {
-            AnyView(
-                VStack(alignment: .leading, spacing: spacing) {
-                    ForEach(items.indices, id: \.self) { index in
+            VStack(alignment: .leading, spacing: lineSpacing) {
+                ForEach(items.indices, id: \.self) { index in
+                    Backport.Label {
                         items[index].content
-                            .padding(.leading, padding)
-                            .background(
-                                bullet(isChecked: items[index].isChecked)
-                                , alignment: .init(horizontal: .leading, vertical: .firstTextBaseline))
+                    } icon: {
+                        if items[index].isChecked {
+                            checked
+                        } else {
+                            unchecked
+                        }
                     }
                 }
-            )
+            }
         }
     }
 
@@ -68,35 +60,14 @@ public extension CheckedListMarkdownStyle where Self == NoCheckedListMarkdownSty
     static var hidden: Self { NoCheckedListMarkdownStyle() }
 }
 
-public extension CheckedListMarkdownStyle where Self == DefaultCheckedListMarkdownStyle {
-    private static var uncheckedImage: Image { Image(systemName: "circle") }
-    private static var checkedImage: Image { Image(systemName: "checkmark.circle.fill") }
+extension Image {
+    static var unchecked: Self { .init(systemName: "circle") }
+    static var checked: Self { .init(systemName: "checkmark.circle.fill") }
+}
 
+public extension CheckedListMarkdownStyle where Self == DefaultCheckedListMarkdownStyle<Image, Image> {
     static var `default`: Self {
-        .init(unchecked: AnyView(uncheckedImage), checked: AnyView(checkedImage))
-    }
-    static func `default`<Unchecked: View, Checked: View>(unchecked: Unchecked, checked: Checked) -> Self {
-        .init(unchecked: AnyView(unchecked), checked: AnyView(checked))
-    }
-
-    static func `default`<Unchecked: View>(unchecked: Unchecked) -> Self {
-        .init(unchecked: AnyView(unchecked), checked: AnyView(checkedImage))
-    }
-
-    static func `default`<Checked: View>(checked: Checked) -> Self {
-        .init(unchecked: AnyView(uncheckedImage), checked: AnyView(checked))
-    }
-
-    static func `default`(unchecked: Color?) -> Self {
-        .init(unchecked: AnyView(uncheckedImage.foregroundColor(unchecked)), checked: AnyView(checkedImage))
-    }
-
-    static func `default`(checked: Color?) -> Self {
-        .init(unchecked: AnyView(uncheckedImage), checked: AnyView(checkedImage.foregroundColor(checked)))
-    }
-
-    static func `default`(unchecked: Color?, checked: Color?) -> Self {
-        .init(unchecked: AnyView(uncheckedImage.foregroundColor(unchecked)), checked: AnyView(checkedImage.foregroundColor(checked)))
+        .init(unchecked: .unchecked, checked: .checked)
     }
 }
 
@@ -105,14 +76,14 @@ private struct CheckedListMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var checkedListMarkdownStyle: AnyCheckedListMarkdownStyle {
+    var markdownChecklistStyle: AnyCheckedListMarkdownStyle {
         get { self[CheckedListMarkdownEnvironmentKey.self] }
         set { self[CheckedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func checkedListStyle<S>(_ style: S) -> some View where S: CheckedListMarkdownStyle {
-        environment(\.checkedListMarkdownStyle, AnyCheckedListMarkdownStyle(style))
+    func markdownChecklistStyle<S>(_ style: S) -> some View where S: CheckedListMarkdownStyle {
+        environment(\.markdownChecklistStyle, AnyCheckedListMarkdownStyle(style))
     }
 }

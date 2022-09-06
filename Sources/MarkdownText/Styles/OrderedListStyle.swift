@@ -36,12 +36,11 @@ public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
             AnyView(
                 VStack(alignment: .leading, spacing: spacing) {
                     ForEach(items.indices, id: \.self) { index in
-                        items[index].content
-                            .padding(.leading, padding)
-                            .overlay(
-                                Text("\(index + startOrder).")
-                                    .foregroundColor(color)
-                                , alignment: .init(horizontal: .leading, vertical: .firstTextBaseline))
+                        Backport.Label {
+                            items[index].content
+                        } icon: {
+                            Text("\(index + startOrder).")
+                        }
                     }
                 }
             )
@@ -73,14 +72,14 @@ private struct OrderedListMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var orderedListMarkdownStyle: AnyOrderedListMarkdownStyle {
+    var markdownOrderedListStyle: AnyOrderedListMarkdownStyle {
         get { self[OrderedListMarkdownEnvironmentKey.self] }
         set { self[OrderedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func orderedListStyle<S>(_ style: S) -> some View where S: OrderedListMarkdownStyle {
-        environment(\.orderedListMarkdownStyle, AnyOrderedListMarkdownStyle(style))
+    func markdownOrderedListStyle<S>(_ style: S) -> some View where S: OrderedListMarkdownStyle {
+        environment(\.markdownOrderedListStyle, AnyOrderedListMarkdownStyle(style))
     }
 }

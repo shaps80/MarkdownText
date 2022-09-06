@@ -42,14 +42,14 @@ private struct ParagraphMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var paragraphMarkdownStyle: AnyParagraphMarkdownStyle {
+    var markdownParagraphStyle: AnyParagraphMarkdownStyle {
         get { self[ParagraphMarkdownEnvironmentKey.self] }
         set { self[ParagraphMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func paragraphStyle<S>(_ style: S) -> some View where S: ParagraphMarkdownStyle {
-        environment(\.paragraphMarkdownStyle, AnyParagraphMarkdownStyle(style))
+    func markdownParagraphStyle<S>(_ style: S) -> some View where S: ParagraphMarkdownStyle {
+        environment(\.markdownParagraphStyle, AnyParagraphMarkdownStyle(style))
     }
 }

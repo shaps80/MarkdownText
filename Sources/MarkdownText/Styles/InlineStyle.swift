@@ -29,7 +29,6 @@ public struct InlineMarkdownConfiguration {
 }
 
 public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
-
     struct Content: View {
         @Environment(\.font) private var font
 
@@ -39,9 +38,11 @@ public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
             components.reduce(into: Text("")) { result, component in
                 if component.attributes.contains(.code) {
                     if #available(iOS 15, *) {
-                        return result = result + component.text.font((font ?? .body).monospaced())
+                        return result = result + component.text
+                            .font(font?.monospaced() ?? .system(.body, design: .monospaced))
                     } else {
                         return result = result + component.text
+                            .font(.system(.body, design: .monospaced))
                     }
                 } else {
                     return result = result + component.text.apply(attributes: component.attributes)
@@ -76,14 +77,14 @@ private struct InlineMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var inlineMarkdownStyle: AnyInlineMarkdownStyle {
+    var markdownInlineStyle: AnyInlineMarkdownStyle {
         get { self[InlineMarkdownEnvironmentKey.self] }
         set { self[InlineMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func inlineStyle<S>(_ style: S) -> some View where S: InlineMarkdownStyle {
-        environment(\.inlineMarkdownStyle, AnyInlineMarkdownStyle(style))
+    func markdownInlineStyle<S>(_ style: S) -> some View where S: InlineMarkdownStyle {
+        environment(\.markdownInlineStyle, AnyInlineMarkdownStyle(style))
     }
 }

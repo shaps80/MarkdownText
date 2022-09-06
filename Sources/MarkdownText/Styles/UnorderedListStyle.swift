@@ -33,12 +33,11 @@ public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
             AnyView(
                 VStack(alignment: .leading, spacing: spacing) {
                     ForEach(items.indices, id: \.self) { index in
-                        items[index].content
-                            .padding(.leading, padding)
-                            .overlay(
-                                bullet
-                                    .foregroundColor(color)
-                                , alignment: .init(horizontal: .leading, vertical: .firstTextBaseline))
+                        Backport.Label {
+                            items[index].content
+                        } icon: {
+                            bullet
+                        }
                     }
                 }
             )
@@ -75,14 +74,14 @@ private struct UnorderedListMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var unorderedListMarkdownStyle: AnyUnorderedListMarkdownStyle {
+    var markdownUnorderedListStyle: AnyUnorderedListMarkdownStyle {
         get { self[UnorderedListMarkdownEnvironmentKey.self] }
         set { self[UnorderedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func unorderedListStyle<S>(_ style: S) -> some View where S: UnorderedListMarkdownStyle {
-        environment(\.unorderedListMarkdownStyle, AnyUnorderedListMarkdownStyle(style))
+    func markdownUnorderedListStyle<S>(_ style: S) -> some View where S: UnorderedListMarkdownStyle {
+        environment(\.markdownUnorderedListStyle, AnyUnorderedListMarkdownStyle(style))
     }
 }

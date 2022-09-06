@@ -72,14 +72,14 @@ private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var imageMarkdownStyle: AnyImageMarkdownStyle {
+    var markdownImageStyle: AnyImageMarkdownStyle {
         get { self[ImageMarkdownEnvironmentKey.self] }
         set { self[ImageMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func imageStyle<S>(_ style: S) -> some View where S: ImageMarkdownStyle {
-        environment(\.imageMarkdownStyle, AnyImageMarkdownStyle(style))
+    func markdownImageStyle<S>(_ style: S) -> some View where S: ImageMarkdownStyle {
+        environment(\.markdownImageStyle, AnyImageMarkdownStyle(style))
     }
 }

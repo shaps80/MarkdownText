@@ -3,16 +3,16 @@ import Markdown
 
 private struct MarkdownContent: View {
     @Environment(\.multilineTextAlignment) private var alignment
-    @Environment(\.headerMarkdownStyle) private var headerStyle
-    @Environment(\.paragraphMarkdownStyle) private var paragraphStyle
-    @Environment(\.quoteMarkdownStyle) private var quoteStyle
-    @Environment(\.codeMarkdownStyle) private var codeStyle
-    @Environment(\.thematicMarkdownStyle) private var thematicStyle
-    @Environment(\.orderedListMarkdownStyle) private var orderedStyle
-    @Environment(\.unorderedListMarkdownStyle) private var unorderedStyle
-    @Environment(\.checkedListMarkdownStyle) private var checkedStyle
-    @Environment(\.imageMarkdownStyle) private var imageStyle
-    @Environment(\.inlineMarkdownStyle) private var inlineStyle
+    @Environment(\.markdownHeadingStyle) private var headerStyle
+    @Environment(\.markdownParagraphStyle) private var paragraphStyle
+    @Environment(\.markdownQuoteStyle) private var quoteStyle
+    @Environment(\.markdownCodeStyle) private var codeStyle
+    @Environment(\.markdownThematicBreakStyle) private var thematicBreak
+    @Environment(\.markdownOrderedListStyle) private var orderedStyle
+    @Environment(\.markdownUnorderedListStyle) private var unorderedStyle
+    @Environment(\.markdownChecklistStyle) private var checkedStyle
+    @Environment(\.markdownImageStyle) private var imageStyle
+    @Environment(\.markdownInlineStyle) private var inlineStyle
 
     private var content: some View {
         ForEach(elements.indices, id: \.self) { index in
@@ -34,7 +34,7 @@ private struct MarkdownContent: View {
             case let .code(config):
                 codeStyle.label(config)
             case let .thematicBreak(config):
-                thematicStyle.label(config)
+                thematicBreak.label(config)
             case let .image(config):
                 imageStyle.label(config)
             }

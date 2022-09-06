@@ -42,14 +42,14 @@ private struct QuoteMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var quoteMarkdownStyle: AnyQuoteMarkdownStyle {
+    var markdownQuoteStyle: AnyQuoteMarkdownStyle {
         get { self[QuoteMarkdownEnvironmentKey.self] }
         set { self[QuoteMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func quoteStyle<S>(_ style: S) -> some View where S: QuoteMarkdownStyle {
-        environment(\.quoteMarkdownStyle, AnyQuoteMarkdownStyle(style))
+    func markdownQuoteStyle<S>(_ style: S) -> some View where S: QuoteMarkdownStyle {
+        environment(\.markdownQuoteStyle, AnyQuoteMarkdownStyle(style))
     }
 }
