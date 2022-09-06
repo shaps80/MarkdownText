@@ -6,10 +6,13 @@ public protocol ParagraphMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-internal struct AnyParagraphMarkdownStyle {
+public struct AnyParagraphMarkdownStyle: ParagraphMarkdownStyle {
     var label: (ParagraphMarkdownConfiguration) -> AnyView
     init<S: ParagraphMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
+    }
+    public func makeBody(configuration: Configuration) -> some View {
+        label(configuration)
     }
 }
 
@@ -44,7 +47,7 @@ private struct ParagraphMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyParagraphMarkdownStyle(.default)
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var markdownParagraphStyle: AnyParagraphMarkdownStyle {
         get { self[ParagraphMarkdownEnvironmentKey.self] }
         set { self[ParagraphMarkdownEnvironmentKey.self] = newValue }

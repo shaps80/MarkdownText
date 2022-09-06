@@ -20,7 +20,8 @@ public struct QuoteMarkdownConfiguration {
 public struct DefaultQuoteMarkdownStyle: QuoteMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.paragraph.label
+        DefaultParagraphMarkdownStyle()
+            .makeBody(configuration: configuration.paragraph)
     }
 }
 
