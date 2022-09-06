@@ -18,6 +18,7 @@ public struct ParagraphMarkdownConfiguration {
 }
 
 public struct NoParagraphMarkdownStyle: ParagraphMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
@@ -28,6 +29,7 @@ public extension ParagraphMarkdownStyle where Self == NoParagraphMarkdownStyle {
 }
 
 public struct DefaultParagraphMarkdownStyle: ParagraphMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }

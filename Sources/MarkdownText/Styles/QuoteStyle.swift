@@ -18,6 +18,7 @@ public struct QuoteMarkdownConfiguration {
 }
 
 public struct DefaultQuoteMarkdownStyle: QuoteMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
@@ -28,6 +29,7 @@ public extension QuoteMarkdownStyle where Self == DefaultQuoteMarkdownStyle {
 }
 
 public struct NoQuoteMarkdownStyle: QuoteMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }

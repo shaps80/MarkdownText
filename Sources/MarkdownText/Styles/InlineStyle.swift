@@ -51,6 +51,8 @@ public struct DefaultInlineMarkdownStyle: InlineMarkdownStyle {
         }
     }
 
+    public init() { }
+
     public func makeBody(configuration: Configuration) -> some View {
         Content(components: configuration.components)
     }

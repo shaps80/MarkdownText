@@ -18,37 +18,30 @@ public struct OrderedListMarkdownConfiguration {
 }
 
 public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
-    private let padding = UIFontMetrics(forTextStyle: .body)
-        .scaledValue(for: 30)
-
-    var startOrder: Int = 1
-    var color: Color?
-
     struct Content: View {
-        @Backport.ScaledMetric(wrappedValue: 30) private var padding
-        @Backport.ScaledMetric(wrappedValue: 6) private var spacing
+        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @Environment(\.lineSpacing) private var spacing
 
-        var startOrder: Int = 1
-        var color: Color?
         var items: [OrderedItem]
 
         var body: some View {
-            AnyView(
-                VStack(alignment: .leading, spacing: spacing) {
-                    ForEach(items.indices, id: \.self) { index in
-                        Backport.Label {
-                            items[index].content
-                        } icon: {
-                            Text("\(index + startOrder).")
-                        }
+            VStack(alignment: .leading, spacing: spacing) {
+                ForEach(items.indices, id: \.self) { index in
+                    Backport.Label {
+                        items[index].content
+                    } icon: {
+                        Text("\(index + 1).")
+                            .frame(minWidth: reservedWidth)
                     }
                 }
-            )
+            }
         }
     }
 
+    public init() { }
+
     public func makeBody(configuration: Configuration) -> some View {
-        Content(startOrder: startOrder, color: color, items: configuration.items)
+        Content(items: configuration.items)
     }
 }
 
@@ -63,8 +56,7 @@ public extension OrderedListMarkdownStyle where Self == NoOrderedListMarkdownSty
 }
 
 public extension OrderedListMarkdownStyle where Self == DefaultOrderedListMarkdownStyle {
-    static var `default`: Self { .init(color: nil) }
-    static func `default`(startOrder: Int = 1, color: Color? = nil) -> Self { .init(startOrder: startOrder, color: color) }
+    static var `default`: Self { .init() }
 }
 
 private struct OrderedListMarkdownEnvironmentKey: EnvironmentKey {

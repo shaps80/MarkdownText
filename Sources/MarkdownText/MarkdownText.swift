@@ -27,10 +27,13 @@ private struct MarkdownContent: View {
                 quoteStyle.label(config)
             case let .orderedList(config):
                 orderedStyle.label(config)
+                    .environment(\.lineSpacing, 5)
             case let .unorderedList(config):
                 unorderedStyle.label(config)
+                    .environment(\.lineSpacing, 5)
             case let .checkedList(config):
                 checkedStyle.label(config)
+                    .environment(\.lineSpacing, 5)
             case let .code(config):
                 codeStyle.label(config)
             case let .thematicBreak(config):

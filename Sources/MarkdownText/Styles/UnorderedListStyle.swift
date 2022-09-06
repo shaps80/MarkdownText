@@ -18,38 +18,36 @@ public struct UnorderedListMarkdownConfiguration {
 }
 
 public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
-    var bullet: AnyView
-    var color: Color?
-
     struct Content: View {
-        @Backport.ScaledMetric(wrappedValue: 30) private var padding
-        @Backport.ScaledMetric(wrappedValue: 6) private var spacing
+        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @Environment(\.lineSpacing) private var spacing
 
-        var bullet: AnyView
-        var color: Color?
+        var bullet: Text
         var items: [UnorderedItem]
 
         var body: some View {
-            AnyView(
-                VStack(alignment: .leading, spacing: spacing) {
-                    ForEach(items.indices, id: \.self) { index in
-                        Backport.Label {
-                            items[index].content
-                        } icon: {
-                            bullet
-                        }
+            VStack(alignment: .leading, spacing: spacing) {
+                ForEach(items.indices, id: \.self) { index in
+                    Backport.Label {
+                        items[index].content
+                    } icon: {
+                        bullet
+                            .frame(minWidth: reservedWidth)
                     }
                 }
-            )
+            }
         }
     }
 
+    public init() { }
+
     public func makeBody(configuration: Configuration) -> some View {
-        Content(bullet: bullet, color: color, items: configuration.items)
+        Content(bullet: Text("–"), items: configuration.items)
     }
 }
 
 public struct NoUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
@@ -60,13 +58,7 @@ public extension UnorderedListMarkdownStyle where Self == NoUnorderedListMarkdow
 }
 
 public extension UnorderedListMarkdownStyle where Self == DefaultUnorderedListMarkdownStyle {
-    static var `default`: Self { .default(prefix: "–") }
-    static func `default`(prefix: String = "–", color: Color? = nil) -> Self {
-        .init(bullet: AnyView(Text(prefix)), color: color)
-    }
-    static func `default`(image: Image, color: Color? = nil) -> Self {
-        .init(bullet: AnyView(image), color: color)
-    }
+    static var `default`: Self { .init() }
 }
 
 private struct UnorderedListMarkdownEnvironmentKey: EnvironmentKey {

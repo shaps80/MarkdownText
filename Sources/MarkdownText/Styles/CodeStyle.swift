@@ -62,10 +62,17 @@ public struct DefaultCodeMarkdownStyle: CodeMarkdownStyle {
     }
 }
 
+public extension DefaultCodeMarkdownStyle {
+    init() {
+        axes = .horizontal
+        showsIndicators = false
+    }
+}
+
 public extension CodeMarkdownStyle where Self == DefaultCodeMarkdownStyle {
     /// The default code style in the current context.
     static var `default`: Self {
-        .init(axes: .horizontal, showsIndicators: false)
+        .init()
     }
 
     /// The default code style in the current context.

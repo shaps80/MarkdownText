@@ -22,23 +22,27 @@ public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: C
     let checked: Checked
 
     struct Content: View {
-        @Environment(\.lineSpacing) private var lineSpacing
+        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @Environment(\.lineSpacing) private var spacing
 
         let unchecked: Unchecked
         let checked: Checked
         let items: [ChecklistItem]
 
         var body: some View {
-            VStack(alignment: .leading, spacing: lineSpacing) {
+            VStack(alignment: .leading, spacing: spacing) {
                 ForEach(items.indices, id: \.self) { index in
                     Backport.Label {
                         items[index].content
                     } icon: {
-                        if items[index].isChecked {
-                            checked
-                        } else {
-                            unchecked
+                        Group {
+                            if items[index].isChecked {
+                                checked
+                            } else {
+                                unchecked
+                            }
                         }
+                        .frame(minWidth: reservedWidth)
                     }
                 }
             }
@@ -51,6 +55,7 @@ public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: C
 }
 
 public struct NoCheckedListMarkdownStyle: CheckedListMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
@@ -66,8 +71,10 @@ extension Image {
 }
 
 public extension CheckedListMarkdownStyle where Self == DefaultCheckedListMarkdownStyle<Image, Image> {
-    static var `default`: Self {
-        .init(unchecked: .unchecked, checked: .checked)
+    static var `default`: Self { .init() }
+
+    init() {
+        self.init(unchecked: .unchecked, checked: .checked)
     }
 }
 

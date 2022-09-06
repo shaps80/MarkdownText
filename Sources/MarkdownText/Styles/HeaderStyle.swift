@@ -39,6 +39,7 @@ public struct HeaderMarkdownConfiguration {
 }
 
 public struct NoHeaderMarkdownStyle: HeaderMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
@@ -49,6 +50,7 @@ public extension HeaderMarkdownStyle where Self == NoHeaderMarkdownStyle {
 }
 
 public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(configuration.preferredStyle).weight(.bold))

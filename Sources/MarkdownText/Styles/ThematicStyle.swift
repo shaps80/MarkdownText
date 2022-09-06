@@ -18,21 +18,14 @@ public struct ThematicMarkdownConfiguration {
 }
 
 public struct DefaultThematicMarkdownStyle: ThematicBreakMarkdownStyle {
-    var thickness: CGFloat = 1
-    var color: Color?
-
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        if let color = color {
-            RoundedRectangle(cornerRadius: thickness)
-                .frame(height: thickness)
-                .foregroundColor(color)
-        } else {
-            Divider()
-        }
+        Divider()
     }
 }
 
 public struct NoThematicMarkdownStyle: ThematicBreakMarkdownStyle {
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         EmptyView()
     }
@@ -40,9 +33,6 @@ public struct NoThematicMarkdownStyle: ThematicBreakMarkdownStyle {
 
 public extension ThematicBreakMarkdownStyle where Self == DefaultThematicMarkdownStyle {
     static var `default`: Self { .init() }
-    static func rounded(thickness: CGFloat = 1, color: Color = .init(.separator)) -> Self {
-        .init(thickness: thickness, color: color)
-    }
 }
 
 public extension ThematicBreakMarkdownStyle where Self == NoThematicMarkdownStyle {

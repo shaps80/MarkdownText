@@ -100,7 +100,7 @@ extension Backport where Wrapped == Any {
             if let style = style {
                 style.makeBody(configuration: config.environment(environment))
             } else {
-                DefaultLabelStyle()
+                ListLabelStyle()
                     .makeBody(configuration: config.environment(environment))
             }
         }
