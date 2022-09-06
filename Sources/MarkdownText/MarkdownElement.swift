@@ -7,7 +7,7 @@ enum MarkdownElement {
 
     case orderedList(OrderedListMarkdownConfiguration)
     case unorderedList(UnorderedListMarkdownConfiguration)
-    case checkedList(CheckedListMarkdownConfiguration)
+    case checklist(ChecklistMarkdownConfiguration)
 
     case code(CodeMarkdownConfiguration)
     case thematicBreak(ThematicMarkdownConfiguration)
@@ -63,15 +63,15 @@ internal extension Text {
         var text = self
 
         if attributes.contains(.bold) {
-            text = strong.makeBody(configuration: .init(label: text))
+            text = strong.makeBody(configuration: .init(text: text))
         }
 
         if attributes.contains(.italic) {
-            text = emphasis.makeBody(configuration: .init(label: text))
+            text = emphasis.makeBody(configuration: .init(text: text))
         }
 
         if attributes.contains(.strikethrough) {
-            text = strikethrough.makeBody(configuration: .init(label: text))
+            text = strikethrough.makeBody(configuration: .init(text: text))
         }
 
         return text

@@ -17,58 +17,42 @@ public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
 }
 
 public struct CodeMarkdownConfiguration {
-    public let label: Text
     public let code: String
     public let language: String?
 
-    init(code: String, language: String?) {
-        self.code = code.trimmingCharacters(in: .newlines)
-        self.language = language
-        self.label = Text(code)
-    }
-}
+    struct Label: View {
+        @Environment(\.font) private var font
 
-public struct NoCodeMarkdownStyle: CodeMarkdownStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
+        let code: String
+        let language: String?
 
-public extension CodeMarkdownStyle where Self == NoCodeMarkdownStyle {
-    static var hidden: Self { NoCodeMarkdownStyle() }
+        var body: some View {
+            if #available(iOS 15, *) {
+                Text(code).font(font?.monospaced() ?? .system(.body, design: .monospaced))
+            } else {
+                Text(code).font(.system(.body, design: .monospaced))
+            }
+        }
+    }
+
+    public var label: some View {
+        Label(code: code, language: language)
+    }
 }
 
 public struct DefaultCodeMarkdownStyle: CodeMarkdownStyle {
     var axes: Axis.Set
     var showsIndicators: Bool
 
-    struct Content: View {
-        @Environment(\.font) private var font
-
-        var axes: Axis.Set
-        var showsIndicators: Bool
-        var label: Text
-
-        var body: some View {
-            ScrollView(axes, showsIndicators: showsIndicators) {
-                if #available(iOS 15, *) {
-                    label.font(font?.monospaced() ?? .system(.body, design: .monospaced))
-                } else {
-                    label.font(.system(.body, design: .monospaced))
-                }
-            }
-        }
+    public init(_ axes: Axis.Set = .horizontal, showsIndicators: Bool = false) {
+        self.axes = axes
+        self.showsIndicators = showsIndicators
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        Content(axes: axes, showsIndicators: showsIndicators, label: configuration.label)
-    }
-}
-
-public extension DefaultCodeMarkdownStyle {
-    init() {
-        axes = .horizontal
-        showsIndicators = false
+        ScrollView(axes, showsIndicators: showsIndicators) {
+            configuration.label
+        }
     }
 }
 
@@ -83,7 +67,7 @@ public extension CodeMarkdownStyle where Self == DefaultCodeMarkdownStyle {
     ///   - axes: The scrollable axes of the scroll view. Defaults to `Axis/horizontal`
     ///   - showsIndicators: A value that indicates whether the scroll view displays the scrollable component of the content offset. Defaults to `false`
     static func `default`(_ axes: Axis.Set, showsIndicators: Bool = false) -> Self {
-        .init(axes: axes, showsIndicators: showsIndicators)
+        .init(axes, showsIndicators: showsIndicators)
     }
 }
 

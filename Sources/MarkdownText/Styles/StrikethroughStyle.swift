@@ -6,13 +6,14 @@ public protocol StrikethroughMarkdownStyle {
 }
 
 public struct StrikethroughMarkdownConfiguration {
-    public let label: Text
+    public let text: Text
+    public var label: Text { text.strikethrough() }
 }
 
 public struct DefaultStrikethroughMarkdownStyle: StrikethroughMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        configuration.label.strikethrough()
+        configuration.label
     }
 }
 

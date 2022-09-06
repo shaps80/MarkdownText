@@ -32,17 +32,6 @@ public extension QuoteMarkdownStyle where Self == DefaultQuoteMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
-public struct NoQuoteMarkdownStyle: QuoteMarkdownStyle {
-    public init() { }
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
-
-public extension QuoteMarkdownStyle where Self == NoQuoteMarkdownStyle {
-    static var hidden: Self { NoQuoteMarkdownStyle() }
-}
-
 private struct QuoteMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyQuoteMarkdownStyle(.default)
 }

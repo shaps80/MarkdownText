@@ -6,13 +6,14 @@ public protocol StrongMarkdownStyle {
 }
 
 public struct StrongMarkdownConfiguration {
-    public let label: Text
+    public let text: Text
+    public var label: Text { text.bold() }
 }
 
 public struct DefaultStrongMarkdownStyle: StrongMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        configuration.label.bold()
+        configuration.label
     }
 }
 

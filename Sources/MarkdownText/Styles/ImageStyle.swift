@@ -21,16 +21,6 @@ public struct ImageMarkdownConfiguration {
     public let title: String
 }
 
-public struct NoImageMarkdownStyle: ImageMarkdownStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
-
-public extension ImageMarkdownStyle where Self == NoImageMarkdownStyle {
-    static var hidden: Self { NoImageMarkdownStyle() }
-}
-
 public struct LocalImageMarkdownStyle: ImageMarkdownStyle {
     enum Source {
         case system
@@ -71,7 +61,7 @@ public extension ImageMarkdownStyle where Self == LocalImageMarkdownStyle {
 }
 
 private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyImageMarkdownStyle(.hidden)
+    static let defaultValue = AnyImageMarkdownStyle(.system)
 }
 
 public extension EnvironmentValues {

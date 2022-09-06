@@ -6,13 +6,14 @@ public protocol EmphasisMarkdownStyle {
 }
 
 public struct EmphasisMarkdownConfiguration {
-    public let label: Text
+    public let text: Text
+    public var label: Text { text.italic() }
 }
 
 public struct DefaultEmphasisMarkdownStyle: EmphasisMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        configuration.label.italic()
+        configuration.label
     }
 }
 

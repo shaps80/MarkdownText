@@ -17,47 +17,47 @@ public struct AnyOrderedListMarkdownStyle: OrderedListMarkdownStyle {
 }
 
 public struct OrderedListMarkdownConfiguration {
-    public let items: [OrderedItem]
-}
+    public let level: Int
+    public let bullet: OrderedBulletMarkdownConfiguration
+    public let paragraph: ParagraphMarkdownConfiguration
 
-public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
-    struct Content: View {
+    struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
-        @Environment(\.lineSpacing) private var spacing
-        @Environment(\.markdownParagraphStyle) private var style
+        @Environment(\.markdownParagraphStyle) private var paragraphStyle
+        @Environment(\.markdownOrderedBulletStyle) private var bulletStyle
 
-        var items: [OrderedItem]
+        public let level: Int
+        public let bullet: OrderedBulletMarkdownConfiguration
+        public let paragraph: ParagraphMarkdownConfiguration
+
+        private var space: String {
+            Array(repeating: "    ", count: level).joined()
+        }
 
         var body: some View {
-            VStack(alignment: .leading, spacing: spacing) {
-                ForEach(items.indices, id: \.self) { index in
-                    Backport.Label {
-                        style.makeBody(configuration: items[index].paragraph)
-                    } icon: {
-                        let order = items[index].order ?? (index + 1)
-                        Text("\(order).")
-                            .frame(minWidth: reservedWidth)
-                    }
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                Text(space)
+
+                Backport.Label {
+                    paragraphStyle.makeBody(configuration: paragraph)
+                } icon: {
+                    bulletStyle.makeBody(configuration: bullet)
+                        .frame(minWidth: reservedWidth)
                 }
             }
         }
     }
 
+    public var label: some View {
+        Label(level: level, bullet: bullet, paragraph: paragraph)
+    }
+}
+
+public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
     public init() { }
-
     public func makeBody(configuration: Configuration) -> some View {
-        Content(items: configuration.items)
+        configuration.label
     }
-}
-
-public struct NoOrderedListMarkdownStyle: OrderedListMarkdownStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
-
-public extension OrderedListMarkdownStyle where Self == NoOrderedListMarkdownStyle {
-    static var hidden: Self { NoOrderedListMarkdownStyle() }
 }
 
 public extension OrderedListMarkdownStyle where Self == DefaultOrderedListMarkdownStyle {

@@ -31,7 +31,7 @@ private struct MarkdownContent: View {
             case let .unorderedList(config):
                 unorderedStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
-            case let .checkedList(config):
+            case let .checklist(config):
                 checkedStyle.makeBody(configuration: config)
                     .environment(\.lineSpacing, 5)
             case let .code(config):

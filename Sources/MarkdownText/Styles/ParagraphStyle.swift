@@ -20,17 +20,6 @@ public struct ParagraphMarkdownConfiguration {
     let inline: InlineMarkdownConfiguration
 }
 
-public struct NoParagraphMarkdownStyle: ParagraphMarkdownStyle {
-    public init() { }
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
-
-public extension ParagraphMarkdownStyle where Self == NoParagraphMarkdownStyle {
-    static var hidden: Self { NoParagraphMarkdownStyle() }
-}
-
 public struct DefaultParagraphMarkdownStyle: ParagraphMarkdownStyle {
     struct Content: View {
         let configuration: InlineMarkdownConfiguration

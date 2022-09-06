@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol CheckedListMarkdownStyle {
+public protocol ChecklistMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = CheckedListMarkdownConfiguration
+    typealias Configuration = ChecklistMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyCheckedListMarkdownStyle: CheckedListMarkdownStyle {
-    var label: (CheckedListMarkdownConfiguration) -> AnyView
-    init<S: CheckedListMarkdownStyle>(_ style: S) {
+public struct AnyChecklistMarkdownStyle: ChecklistMarkdownStyle {
+    var label: (ChecklistMarkdownConfiguration) -> AnyView
+    init<S: ChecklistMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,85 +16,57 @@ public struct AnyCheckedListMarkdownStyle: CheckedListMarkdownStyle {
     }
 }
 
-public struct CheckedListMarkdownConfiguration {
-    public let items: [ChecklistItem]
-}
+public struct ChecklistMarkdownConfiguration {
+    public let level: Int
+    public let bullet: ChecklistBulletMarkdownConfiguration
+    public let paragraph: ParagraphMarkdownConfiguration
 
-public struct DefaultCheckedListMarkdownStyle<Checked: View, Unchecked: View>: CheckedListMarkdownStyle {
-    let unchecked: Unchecked
-    let checked: Checked
+    struct Label: View {
+        @Environment(\.markdownParagraphStyle) private var paragraphStyle
+        @Environment(\.markdownChecklistBulletStyle) private var bulletStyle
 
-    struct Content: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
-        @Environment(\.lineSpacing) private var spacing
-        @Environment(\.markdownParagraphStyle) private var style
-
-        let unchecked: Unchecked
-        let checked: Checked
-        let items: [ChecklistItem]
+        public let level: Int
+        public let bullet: ChecklistBulletMarkdownConfiguration
+        public let paragraph: ParagraphMarkdownConfiguration
 
         var body: some View {
-            VStack(alignment: .leading, spacing: spacing) {
-                ForEach(items.indices, id: \.self) { index in
-                    Backport.Label {
-                        style.makeBody(configuration: items[index].paragraph)
-                    } icon: {
-                        Group {
-                            if items[index].isChecked {
-                                checked
-                            } else {
-                                unchecked
-                            }
-                        }
-                        .frame(minWidth: reservedWidth)
-                    }
-                }
+            Backport.Label {
+                paragraphStyle.makeBody(configuration: paragraph)
+            } icon: {
+                bulletStyle.makeBody(configuration: bullet)
             }
         }
     }
 
-    public func makeBody(configuration: Configuration) -> some View {
-        Content(unchecked: unchecked, checked: checked, items: configuration.items)
+    public var label: some View {
+        Label(level: level, bullet: bullet, paragraph: paragraph)
     }
 }
 
-public struct NoCheckedListMarkdownStyle: CheckedListMarkdownStyle {
+public struct DefaultChecklistMarkdownStyle: ChecklistMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
+        configuration.label
     }
 }
 
-public extension CheckedListMarkdownStyle where Self == NoCheckedListMarkdownStyle {
-    static var hidden: Self { NoCheckedListMarkdownStyle() }
-}
-
-extension Image {
-    static var unchecked: Self { .init(systemName: "circle") }
-    static var checked: Self { .init(systemName: "checkmark.circle.fill") }
-}
-
-public extension CheckedListMarkdownStyle where Self == DefaultCheckedListMarkdownStyle<Image, Image> {
+public extension ChecklistMarkdownStyle where Self == DefaultChecklistMarkdownStyle {
     static var `default`: Self { .init() }
-
-    init() {
-        self.init(unchecked: .unchecked, checked: .checked)
-    }
 }
 
 private struct CheckedListMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyCheckedListMarkdownStyle(.default)
+    static let defaultValue = AnyChecklistMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownChecklistStyle: AnyCheckedListMarkdownStyle {
+    var markdownChecklistStyle: AnyChecklistMarkdownStyle {
         get { self[CheckedListMarkdownEnvironmentKey.self] }
         set { self[CheckedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownChecklistStyle<S>(_ style: S) -> some View where S: CheckedListMarkdownStyle {
-        environment(\.markdownChecklistStyle, AnyCheckedListMarkdownStyle(style))
+    func markdownChecklistStyle<S>(_ style: S) -> some View where S: ChecklistMarkdownStyle {
+        environment(\.markdownChecklistStyle, AnyChecklistMarkdownStyle(style))
     }
 }

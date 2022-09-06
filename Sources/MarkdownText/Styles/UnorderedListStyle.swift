@@ -17,48 +17,47 @@ public struct AnyUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
 }
 
 public struct UnorderedListMarkdownConfiguration {
-    public let items: [UnorderedItem]
-}
+    public let level: Int
+    public let bullet: UnorderedBulletMarkdownConfiguration
+    public let paragraph: ParagraphMarkdownConfiguration
 
-public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
-    struct Content: View {
+    struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
-        @Environment(\.lineSpacing) private var spacing
-        @Environment(\.markdownParagraphStyle) private var style
+        @Environment(\.markdownParagraphStyle) private var paragraphStyle
+        @Environment(\.markdownUnorderedBulletStyle) private var bulletStyle
 
-        var bullet: Text
-        var items: [UnorderedItem]
+        public let level: Int
+        public let bullet: UnorderedBulletMarkdownConfiguration
+        public let paragraph: ParagraphMarkdownConfiguration
+
+        private var space: String {
+            Array(repeating: "     ", count: level).joined()
+        }
 
         var body: some View {
-            VStack(alignment: .leading, spacing: spacing) {
-                ForEach(items.indices, id: \.self) { index in
-                    Backport.Label {
-                        style.makeBody(configuration: items[index].paragraph)
-                    } icon: {
-                        bullet
-                            .frame(minWidth: reservedWidth)
-                    }
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                Text(space)
+
+                Backport.Label {
+                    paragraphStyle.makeBody(configuration: paragraph)
+                } icon: {
+                    bulletStyle.makeBody(configuration: bullet)
+                        .frame(minWidth: reservedWidth)
                 }
             }
         }
     }
 
-    public init() { }
-
-    public func makeBody(configuration: Configuration) -> some View {
-        Content(bullet: Text("–"), items: configuration.items)
+    public var label: some View {
+        Label(level: level, bullet: bullet, paragraph: paragraph)
     }
 }
 
-public struct NoUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
+public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
+        configuration.label
     }
-}
-
-public extension UnorderedListMarkdownStyle where Self == NoUnorderedListMarkdownStyle {
-    static var hidden: Self { NoUnorderedListMarkdownStyle() }
 }
 
 public extension UnorderedListMarkdownStyle where Self == DefaultUnorderedListMarkdownStyle {

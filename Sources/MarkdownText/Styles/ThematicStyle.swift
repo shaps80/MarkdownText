@@ -27,19 +27,8 @@ public struct DefaultThematicMarkdownStyle: ThematicBreakMarkdownStyle {
     }
 }
 
-public struct NoThematicMarkdownStyle: ThematicBreakMarkdownStyle {
-    public init() { }
-    public func makeBody(configuration: Configuration) -> some View {
-        EmptyView()
-    }
-}
-
 public extension ThematicBreakMarkdownStyle where Self == DefaultThematicMarkdownStyle {
     static var `default`: Self { .init() }
-}
-
-public extension ThematicBreakMarkdownStyle where Self == NoThematicMarkdownStyle {
-    static var hidden: Self { .init() }
 }
 
 private struct MarkdownEnvironmentKey: EnvironmentKey {

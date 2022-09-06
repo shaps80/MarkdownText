@@ -11,15 +11,14 @@ extension Backport where Wrapped == Any {
     /// You can also use ``LabelStyle/automatic`` to construct this style.
     public struct ListLabelStyle: BackportLabelStyle {
         struct Content: View {
-            @Backport.ScaledMetric private var spacing: CGFloat = 5
             let configuration: Configuration
 
             var body: some View {
-                HStack(alignment: .firstTextBaseline, spacing: spacing) {
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
                     configuration.icon
+                    Text(Array(repeating: " ", count: 1).joined())
                     configuration.title
                 }
-                .fixedSize(horizontal: false, vertical: true)
             }
         }
 
