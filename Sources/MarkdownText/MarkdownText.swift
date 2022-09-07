@@ -40,7 +40,7 @@ private struct MarkdownContent: View {
             }
         }
     }
-    
+
     let elements: [MarkdownElement]
     let paragraphSpacing: CGFloat?
     let isLazy: Bool
@@ -76,10 +76,10 @@ private struct MarkdownContent: View {
 public struct LazyMarkdownText: View, MarkupWalker {
     private let content: MarkdownContent
 
-    public init(_ markdown: String, paragraphSpacing: CGFloat? = 20) {
+    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
         let elements = MarkdownTextBuilder(
-            document: Document(parsing: markdown)
-        ).elements
+            document: Document(parsing: markdown, source: source)
+        ).blockElements
 
         content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: true)
     }
@@ -92,10 +92,10 @@ public struct LazyMarkdownText: View, MarkupWalker {
 public struct MarkdownText: View, MarkupWalker {
     private let content: MarkdownContent
 
-    public init(_ markdown: String, paragraphSpacing: CGFloat? = 20) {
+    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
         let elements = MarkdownTextBuilder(
-            document: Document(parsing: markdown, options: [.parseSymbolLinks, .parseSymbolLinks])
-        ).elements
+            document: Document(parsing: markdown, source: source)
+        ).blockElements
 
         content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: false)
     }

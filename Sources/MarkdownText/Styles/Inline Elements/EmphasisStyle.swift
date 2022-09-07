@@ -6,8 +6,8 @@ public protocol EmphasisMarkdownStyle {
 }
 
 public struct EmphasisMarkdownConfiguration {
-    public let text: Text
-    public var label: Text { text.italic() }
+    public let content: Text
+    public var label: Text { content.italic() }
 }
 
 public struct DefaultEmphasisMarkdownStyle: EmphasisMarkdownStyle {

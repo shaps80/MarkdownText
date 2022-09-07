@@ -6,7 +6,7 @@ public protocol HeaderMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyHeaderStyle: HeaderMarkdownStyle {
+public struct AnyHeaderMarkdownStyle: HeaderMarkdownStyle {
     var label: (Configuration) -> AnyView
     init<S: HeaderMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
@@ -67,11 +67,11 @@ public extension HeaderMarkdownStyle where Self == DefaultHeaderMarkdownStyle {
 }
 
 private struct HeaderMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyHeaderStyle(.default)
+    static let defaultValue = AnyHeaderMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownHeadingStyle: AnyHeaderStyle {
+    var markdownHeadingStyle: AnyHeaderMarkdownStyle {
         get { self[HeaderMarkdownEnvironmentKey.self] }
         set { self[HeaderMarkdownEnvironmentKey.self] = newValue }
     }
@@ -79,6 +79,6 @@ public extension EnvironmentValues {
 
 public extension View {
     func markdownHeadingStyle<S>(_ style: S) -> some View where S: HeaderMarkdownStyle {
-        environment(\.markdownHeadingStyle, AnyHeaderStyle(style))
+        environment(\.markdownHeadingStyle, AnyHeaderMarkdownStyle(style))
     }
 }

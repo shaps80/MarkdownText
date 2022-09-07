@@ -1,10 +1,18 @@
 import SwiftUI
 
+indirect enum MarkdownListElement {
+    case list(MarkdownListElement)
+    case ordered(OrderedBulletMarkdownConfiguration)
+    case unordered(UnorderedListMarkdownConfiguration)
+    case checklist(CheckListItemMarkdownConfiguration)
+}
+
 enum MarkdownElement {
     case header(HeaderMarkdownConfiguration)
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
 
+//    case list(MarkdownListElement)
     case orderedListItem(OrderedListItemMarkdownConfiguration)
     case unorderedListItem(UnorderedListItemMarkdownConfiguration)
     case checklistItem(CheckListItemMarkdownConfiguration)
@@ -32,20 +40,20 @@ public struct UnorderedItem {
 
 internal struct Component {
     var text: String
-    var attributes: Attribute = []
+    var attributes: InlineAttributes = []
 }
 
-internal struct Attribute: OptionSet, CustomStringConvertible {
+internal struct InlineAttributes: OptionSet, CustomStringConvertible {
     let rawValue: Int
     init(rawValue: Int) {
         self.rawValue = rawValue
     }
 
-    static let bold = Attribute(rawValue: 1 << 0)
-    static let italic = Attribute(rawValue: 1 << 1)
-    static let strikethrough = Attribute(rawValue: 1 << 2)
-    static let code = Attribute(rawValue: 1 << 3)
-    static let link = Attribute(rawValue: 1 << 4)
+    static let bold = InlineAttributes(rawValue: 1 << 0)
+    static let italic = InlineAttributes(rawValue: 1 << 1)
+    static let strikethrough = InlineAttributes(rawValue: 1 << 2)
+    static let code = InlineAttributes(rawValue: 1 << 3)
+    static let link = InlineAttributes(rawValue: 1 << 4)
 
     var description: String {
         var elements: [String] = []
@@ -59,19 +67,29 @@ internal struct Attribute: OptionSet, CustomStringConvertible {
 }
 
 internal extension Text {
-    func apply(strong: StrongMarkdownStyle, emphasis: EmphasisMarkdownStyle, strikethrough: StrikethroughMarkdownStyle, attributes: Attribute) -> Self {
+    func apply(
+        strong: StrongMarkdownStyle,
+        emphasis: EmphasisMarkdownStyle,
+        strikethrough: StrikethroughMarkdownStyle,
+        link: InlineLinkMarkdownStyle,
+        attributes: InlineAttributes
+    ) -> Self {
         var text = self
 
         if attributes.contains(.bold) {
-            text = strong.makeBody(configuration: .init(text: text))
+            text = strong.makeBody(configuration: .init(content: text))
         }
 
         if attributes.contains(.italic) {
-            text = emphasis.makeBody(configuration: .init(text: text))
+            text = emphasis.makeBody(configuration: .init(content: text))
         }
 
         if attributes.contains(.strikethrough) {
-            text = strikethrough.makeBody(configuration: .init(text: text))
+            text = strikethrough.makeBody(configuration: .init(content: text))
+        }
+
+        if attributes.contains(.link) {
+            text = link.makeBody(configuration: .init(content: text))
         }
 
         return text

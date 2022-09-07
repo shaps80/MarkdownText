@@ -6,8 +6,8 @@ public protocol StrikethroughMarkdownStyle {
 }
 
 public struct StrikethroughMarkdownConfiguration {
-    public let text: Text
-    public var label: Text { text.strikethrough() }
+    public let content: Text
+    public var label: Text { content.strikethrough() }
 }
 
 public struct DefaultStrikethroughMarkdownStyle: StrikethroughMarkdownStyle {

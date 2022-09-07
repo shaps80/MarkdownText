@@ -7,10 +7,10 @@ struct MarkdownTextBuilder: MarkupWalker {
         case ordered
     }
 
-    var components: [Component] = []
-    var elements: [MarkdownElement] = []
     var isNested: Bool = false
-    var nestedElements: [MarkdownElement] = []
+    var nestedBlockElements: [MarkdownElement] = []
+    var inlineElements: [Component] = []
+    var blockElements: [MarkdownElement] = []
     var listStack: [ListItemType] = []
 
     init(document: Document) {
@@ -19,15 +19,18 @@ struct MarkdownTextBuilder: MarkupWalker {
 
     mutating func visitHeading(_ markdown: Heading) {
         descendInto(markdown)
-        elements.append(.header(.init(level: markdown.level, inline: .init(components: components))))
-        components = []
+        blockElements.append(.header(.init(level: markdown.level, inline: .init(components: inlineElements))))
+        inlineElements = []
     }
 
     mutating func visitText(_ markdown: Markdown.Text) {
-        var attributes: Attribute = []
+        var attributes: InlineAttributes = []
         var parent = markdown.parent
+        var text = markdown.string
 
         while parent != nil {
+            defer { parent = parent?.parent }
+
             if parent is Strong {
                 attributes.insert(.bold)
             }
@@ -44,10 +47,17 @@ struct MarkdownTextBuilder: MarkupWalker {
                 attributes.insert(.code)
             }
 
-            parent = parent?.parent
+            if let link = parent as? Markdown.Link {
+                #warning("todo: Links")
+                /*
+                 One idea here could be to collect links like footnotes, reference them in the rendered result as such (at least by default) and then add actual buttons to the bottom of the rendered output?
+                 */
+                attributes.insert(.link)
+                text = link.plainText //+ (link.destination.flatMap { " [\($0)]" } ?? "")
+            }
         }
 
-        components.append(.init(text: .init(markdown.string), attributes: attributes))
+        inlineElements.append(.init(text: .init(text), attributes: attributes))
     }
 
     mutating func visitParagraph(_ markdown: Paragraph) {
@@ -56,43 +66,43 @@ struct MarkdownTextBuilder: MarkupWalker {
         if let listItem = markdown.parent as? ListItem {
             switch listStack.last {
             case .ordered:
-                elements.append(.orderedListItem(.init(
+                blockElements.append(.orderedListItem(.init(
                     level: listStack.count - 1,
                     bullet: .init(order: listItem.indexInParent + 1),
-                    paragraph: .init(inline: .init(components: components))))
+                    paragraph: .init(inline: .init(components: inlineElements))))
                 )
             default:
                 if let checkbox = listItem.checkbox {
-                    elements.append(.checklistItem(.init(
+                    blockElements.append(.checklistItem(.init(
                         level: listStack.count - 1,
                         bullet: .init(isChecked: checkbox == .checked),
-                        paragraph: .init(inline: .init(components: components))))
+                        paragraph: .init(inline: .init(components: inlineElements))))
                     )
                 } else {
-                    elements.append(.unorderedListItem(.init(
+                    blockElements.append(.unorderedListItem(.init(
                         level: listStack.count - 1,
                         bullet: .init(),
-                        paragraph: .init(inline: .init(components: components))))
+                        paragraph: .init(inline: .init(components: inlineElements))))
                     )
                 }
             }
         } else {
             if isNested {
-                nestedElements.append(.paragraph(.init(inline: .init(components: components))))
+                nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
             } else {
-                elements.append(.paragraph(.init(inline: .init(components: components))))
+                blockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
             }
         }
 
-        components = []
+        inlineElements = []
     }
 
     mutating func visitImage(_ markdown: Markdown.Image) {
-        elements.append(.image(.init(source: markdown.source, title: markdown.title)))
+        blockElements.append(.image(.init(source: markdown.source, title: markdown.title)))
     }
 
     mutating func visitLink(_ markdown: Markdown.Link) {
-        #warning("TBD")
+        descendInto(markdown)
     }
 
     mutating func visitStrong(_ markdown: Strong) {
@@ -104,7 +114,7 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitInlineCode(_ markdown: InlineCode) {
-        components.append(.init(text: .init(markdown.code), attributes: .code))
+        inlineElements.append(.init(text: .init(markdown.code), attributes: .code))
     }
 
     mutating func visitStrikethrough(_ markdown: Strikethrough) {
@@ -112,8 +122,8 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitCodeBlock(_ markdown: CodeBlock) {
-        elements.append(.code(.init(code: markdown.code, language: markdown.language)))
-        components = []
+        blockElements.append(.code(.init(code: markdown.code, language: markdown.language)))
+        inlineElements = []
     }
 
     mutating func visitSoftBreak(_ markdown: SoftBreak) {
@@ -121,7 +131,7 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitThematicBreak(_ markdown: ThematicBreak) {
-        elements.append(.thematicBreak(.init()))
+        blockElements.append(.thematicBreak(.init()))
         descendInto(markdown)
     }
 
@@ -145,18 +155,42 @@ struct MarkdownTextBuilder: MarkupWalker {
         isNested = true
         descendInto(markdown)
 
-        for element in nestedElements {
+        for element in nestedBlockElements {
             if case let .paragraph(config) = element {
-                elements.append(.quote(.init(paragraph: config)))
+                blockElements.append(.quote(.init(paragraph: config)))
             }
         }
 
-        components = []
-        nestedElements = []
+        inlineElements = []
+        nestedBlockElements = []
         isNested = false
     }
 
     mutating func visitInlineHTML(_ markdown: InlineHTML) {
-        visitText(.init(markdown.plainText))
+        #warning("TBD")
     }
+
+    mutating func visitTable(_ markdown: Markdown.Table) {
+        #warning("TBD")
+    }
+
+    mutating func visitTableRow(_ markdown: Markdown.Table.Row) {
+        #warning("TBD")
+    }
+
+    mutating func visitTableBody(_ tableBody: Markdown.Table.Body) {
+        #warning("TBD")
+    }
+
+    mutating func visitTableCell(_ tableCell: Markdown.Table.Cell) {
+        #warning("TBD")
+    }
+
+    mutating func visitTableHead(_ tableHead: Markdown.Table.Head) {
+        #warning("TBD")
+    }
+
+    mutating func visitSymbolLink(_ markdown: SymbolLink) { }
+    mutating func visitBlockDirective(_ markdown: BlockDirective) { }
+    mutating func visitCustomInline(_ customInline: CustomInline) { }
 }

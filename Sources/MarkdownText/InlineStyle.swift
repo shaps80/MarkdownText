@@ -7,6 +7,7 @@ struct InlineMarkdownConfiguration {
         @Environment(\.markdownEmphasisStyle) private var emphasis
         @Environment(\.markdownStrikethroughStyle) private var strikethrough
         @Environment(\.markdownInlineCodeStyle) private var code
+        @Environment(\.markdownInlineLinkStyle) private var link
 
         let components: [Component]
 
@@ -21,6 +22,7 @@ struct InlineMarkdownConfiguration {
                         strong: strong,
                         emphasis: emphasis,
                         strikethrough: strikethrough,
+                        link: link,
                         attributes: component.attributes
                     )
                 }

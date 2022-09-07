@@ -6,8 +6,8 @@ public protocol StrongMarkdownStyle {
 }
 
 public struct StrongMarkdownConfiguration {
-    public let text: Text
-    public var label: Text { text.bold() }
+    public let content: Text
+    public var label: Text { content.bold() }
 }
 
 public struct DefaultStrongMarkdownStyle: StrongMarkdownStyle {
