@@ -24,27 +24,29 @@ public struct ListStyleMarkdownConfiguration {
         @Environment(\.markdownCheckListItemStyle) private var checklist
         @Environment(\.lineSpacing) private var spacing
 
-        let element: MarkdownListElement
+        let markdownList: MarkdownList
 
         var body: some View {
             VStack(alignment: .leading, spacing: spacing) {
-                switch element {
-                case let .ordered(config):
-                    ordered.makeBody(configuration: config)
-                case let .unordered(config):
-                    unordered.makeBody(configuration: config)
-                case let .checklist(config):
-                    checklist.makeBody(configuration: config)
-                case let .list(element):
-                    list.makeBody(configuration: .init(element: element))
+                ForEach(markdownList.elements.indices, id: \.self) { index in
+                    switch markdownList.elements[index] {
+                    case let .ordered(config):
+                        ordered.makeBody(configuration: config)
+                    case let .unordered(config):
+                        unordered.makeBody(configuration: config)
+                    case let .checklist(config):
+                        checklist.makeBody(configuration: config)
+                    case let .list(nested):
+                        list.makeBody(configuration: .init(markdownList: nested))
+                    }
                 }
             }
         }
     }
 
-    let element: MarkdownListElement
+    let markdownList: MarkdownList
     public var label: some View {
-        Label(element: element)
+        Label(markdownList: markdownList)
     }
 }
 

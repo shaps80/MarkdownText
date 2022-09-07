@@ -9,7 +9,7 @@ struct InlineMarkdownConfiguration {
         @Environment(\.markdownInlineCodeStyle) private var code
         @Environment(\.markdownInlineLinkStyle) private var link
 
-        let components: [Component]
+        let components: [MarkdownInlineElement]
 
         var body: some View {
             components.reduce(into: Text("")) { result, component in
@@ -30,7 +30,7 @@ struct InlineMarkdownConfiguration {
         }
     }
 
-    let components: [Component]
+    let components: [MarkdownInlineElement]
 
     public var label: some View {
         Label(components: components)

@@ -29,13 +29,13 @@ private struct MarkdownContent: View {
                 thematicBreak.makeBody(configuration: config)
             case let .image(config):
                 imageStyle.makeBody(configuration: config)
-            case let .list(element):
-                listStyle.makeBody(configuration: .init(element: element))
+            case let .list(config):
+                listStyle.makeBody(configuration: config)
             }
         }
     }
 
-    let elements: [MarkdownElement]
+    let elements: [MarkdownBlockElement]
     let paragraphSpacing: CGFloat?
     let isLazy: Bool
 
@@ -47,7 +47,7 @@ private struct MarkdownContent: View {
             : .center
     }
 
-    init(elements: [MarkdownElement], paragraphSpacing: CGFloat?, isLazy: Bool) {
+    init(elements: [MarkdownBlockElement], paragraphSpacing: CGFloat?, isLazy: Bool) {
         self.elements = elements
         self.paragraphSpacing = paragraphSpacing
         self.isLazy = isLazy

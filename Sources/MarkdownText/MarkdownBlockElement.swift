@@ -1,21 +1,26 @@
 import SwiftUI
 
-indirect enum MarkdownListElement {
-    case list(MarkdownListElement)
+enum MarkdownListElement {
+    case list(MarkdownList)
     case ordered(OrderedListItemMarkdownConfiguration)
     case unordered(UnorderedListItemMarkdownConfiguration)
     case checklist(CheckListItemMarkdownConfiguration)
 }
 
-enum MarkdownElement {
+enum MarkdownBlockElement {
     case header(HeaderMarkdownConfiguration)
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
-    case list(MarkdownListElement)
+    case list(ListStyleMarkdownConfiguration)
     case code(CodeMarkdownConfiguration)
     case image(ImageMarkdownConfiguration)
     case thematicBreak(ThematicMarkdownConfiguration)
     case inline(InlineMarkdownConfiguration)
+}
+
+struct MarkdownInlineElement {
+    var text: String
+    var attributes: InlineAttributes = []
 }
 
 public struct ChecklistItem {
@@ -30,11 +35,6 @@ public struct OrderedItem {
 
 public struct UnorderedItem {
     public var paragraph: ParagraphMarkdownConfiguration
-}
-
-internal struct Component {
-    var text: String
-    var attributes: InlineAttributes = []
 }
 
 internal struct InlineAttributes: OptionSet, CustomStringConvertible {

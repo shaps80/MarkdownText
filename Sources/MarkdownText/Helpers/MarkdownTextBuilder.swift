@@ -1,19 +1,38 @@
 import SwiftUI
 import Markdown
 
-struct MarkdownTextBuilder: MarkupWalker {
-    enum ListItemType {
+struct MarkdownList {
+    enum ListType {
         case unordered
         case ordered
     }
 
+    let type: ListType
+    var elements: [MarkdownListElement] = []
+
+    mutating func append(ordered item: OrderedListItemMarkdownConfiguration) {
+        elements.append(.ordered(item))
+    }
+
+    mutating func append(unordered item: UnorderedListItemMarkdownConfiguration) {
+        elements.append(.unordered(item))
+    }
+
+    mutating func append(checklist item: CheckListItemMarkdownConfiguration) {
+        elements.append(.checklist(item))
+    }
+
+    mutating func append(nested list: Self) {
+        elements.append(.list(list))
+    }
+}
+
+struct MarkdownTextBuilder: MarkupWalker {
     var isNested: Bool = false
-    var nestedBlockElements: [MarkdownElement] = []
-    var inlineElements: [Component] = []
-    var blockElements: [MarkdownElement] = []
-    var listStack: [ListItemType] = []
-    var lists: [MarkdownListElement] = []
-    var currentListItem: MarkdownListElement?
+    var nestedBlockElements: [MarkdownBlockElement] = []
+    var inlineElements: [MarkdownInlineElement] = []
+    var blockElements: [MarkdownBlockElement] = []
+    var lists: [MarkdownList] = []
 
     init(document: Document) {
         visit(document)
@@ -63,15 +82,25 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitOrderedList(_ markdown: OrderedList) {
-        listStack.append(.ordered)
+        lists.append(.init(type: .ordered))
         descendInto(markdown)
-        listStack.removeLast()
+
+        if let list = lists.last {
+            blockElements.append(.list(.init(markdownList: list)))
+        }
+
+        lists.removeLast()
     }
 
     mutating func visitUnorderedList(_ markdown: UnorderedList) {
-        listStack.append(.unordered)
+        lists.append(.init(type: .unordered))
         descendInto(markdown)
-        listStack.removeLast()
+
+        if let list = lists.last {
+            blockElements.append(.list(.init(markdownList: list)))
+        }
+
+        lists.removeLast()
     }
 
     mutating func visitListItem(_ markdown: Markdown.ListItem) {
@@ -81,29 +110,32 @@ struct MarkdownTextBuilder: MarkupWalker {
     mutating func visitParagraph(_ markdown: Paragraph) {
         descendInto(markdown)
 
-        if let listItem = markdown.parent as? ListItem {
-            switch listStack.last {
+        if let listItem = markdown.parent as? ListItem, var list = lists.last {
+            switch list.type {
             case .ordered:
-                currentListItem = .ordered(.init(
-                    level: listStack.count - 1,
+                list.append(ordered: .init(
+                    level: list.elements.count - 1,
                     bullet: .init(order: listItem.indexInParent + 1),
                     paragraph: .init(inline: .init(components: inlineElements)))
                 )
             default:
                 if let checkbox = listItem.checkbox {
-                    currentListItem = .checklist(.init(
-                        level: listStack.count - 1,
+                    list.append(checklist: .init(
+                        level: list.elements.count - 1,
                         bullet: .init(isChecked: checkbox == .checked),
                         paragraph: .init(inline: .init(components: inlineElements)))
                     )
                 } else {
-                    currentListItem = .unordered(.init(
-                        level: listStack.count - 1,
-                        bullet: .init(level: listStack.count - 1),
+                    list.append(unordered: .init(
+                        level: list.elements.count - 1,
+                        bullet: .init(level: list.elements.count - 1),
                         paragraph: .init(inline: .init(components: inlineElements)))
                     )
                 }
             }
+
+            let index = list.elements.index(before: list.elements.endIndex)
+            list.elements.replaceSubrange(index...index, with: list.elements)
         } else {
             if isNested {
                 nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
