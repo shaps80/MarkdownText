@@ -42,13 +42,7 @@ private struct MarkdownContent: View {
                 }
             case let .image(config):
                 if imageVisibility != .hidden {
-                    if let source = config.source, let url = URL(string: source), url.host == "img.shields.io" {
-                        inlineStyle.makeBody(configuration: .init(components: [
-                            .init(text: .init(config.title ?? source))
-                        ]))
-                    } else {
-                        imageStyle.makeBody(configuration: config)
-                    }
+                    imageStyle.makeBody(configuration: config)
                 }
             case let .list(config):
                 if listVisibility != .hidden {

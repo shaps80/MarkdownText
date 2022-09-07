@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIBackports
 
 public protocol UnorderedListItemMarkdownStyle {
     associatedtype Body: View
@@ -44,6 +45,7 @@ public struct UnorderedListItemMarkdownConfiguration {
                     bulletStyle.makeBody(configuration: bullet)
                         .frame(minWidth: reservedWidth)
                 }
+                .backport.labelStyle(.list)
             }
         }
     }

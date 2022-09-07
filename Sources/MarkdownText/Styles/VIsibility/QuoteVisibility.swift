@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIBackports
 
 struct QuoteMarkdownVisibility: EnvironmentKey {
     static let defaultValue: Backport<Any>.Visibility = .automatic

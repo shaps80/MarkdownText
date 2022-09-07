@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIBackports
 
 struct ListMarkdownVisibility: EnvironmentKey {
     static let defaultValue: Backport<Any>.Visibility = .automatic

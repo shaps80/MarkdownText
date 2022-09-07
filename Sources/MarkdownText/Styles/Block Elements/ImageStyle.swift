@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIBackports
 
 public protocol ImageMarkdownStyle {
     associatedtype Body: View
@@ -21,29 +22,38 @@ public struct ImageMarkdownConfiguration {
     public let title: String?
 
     private struct Label: View {
-        public let source: String?
-        public let title: String?
+        private var inlineStyle = InlineMarkdownStyle()
+
+        let source: String?
+        let title: String?
+
+        init(source: String?, title: String?) {
+            self.source = source
+            self.title = title
+        }
 
         var body: some View {
             if let source = source, let url = URL(string: source), url.scheme != nil {
-                Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
-                    Group {
+                if source.localizedCaseInsensitiveContains("img.shields.io")
+                    || source.localizedCaseInsensitiveContains(".svg") {
+                    inlineStyle.makeBody(configuration: .init(components: [
+                        .init(text: .init(title ?? source))
+                    ]))
+                } else {
+                    Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
                         switch phase {
                         case let .success(image):
                             image
                                 .resizable()
                                 .scaledToFit()
+                        case .empty:
+                            Backport.ProgressView()
                         default:
                             EmptyView()
                         }
                     }
-//                    .backport.overlay {
-//                        if case .empty = phase {
-//                            Backport.ProgressView()
-//                        }
-//                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: .infinity)
             }
         }
     }
