@@ -31,7 +31,7 @@ public struct UnorderedListMarkdownConfiguration {
         public let paragraph: ParagraphMarkdownConfiguration
 
         private var space: String {
-            Array(repeating: "     ", count: level).joined()
+            Array(repeating: "    ", count: level).joined()
         }
 
         var body: some View {

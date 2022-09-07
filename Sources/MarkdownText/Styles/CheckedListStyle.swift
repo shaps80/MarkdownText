@@ -22,6 +22,7 @@ public struct ChecklistMarkdownConfiguration {
     public let paragraph: ParagraphMarkdownConfiguration
 
     struct Label: View {
+        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
         @Environment(\.markdownChecklistBulletStyle) private var bulletStyle
 
@@ -29,11 +30,20 @@ public struct ChecklistMarkdownConfiguration {
         public let bullet: ChecklistBulletMarkdownConfiguration
         public let paragraph: ParagraphMarkdownConfiguration
 
+        private var space: String {
+            Array(repeating: "    ", count: level).joined()
+        }
+
         var body: some View {
-            Backport.Label {
-                paragraphStyle.makeBody(configuration: paragraph)
-            } icon: {
-                bulletStyle.makeBody(configuration: bullet)
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                Text(space)
+
+                Backport.Label {
+                    paragraphStyle.makeBody(configuration: paragraph)
+                } icon: {
+                    bulletStyle.makeBody(configuration: bullet)
+                        .frame(minWidth: reservedWidth)
+                }
             }
         }
     }

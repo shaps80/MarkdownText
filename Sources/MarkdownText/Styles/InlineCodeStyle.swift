@@ -6,20 +6,24 @@ public protocol InlineCodeMarkdownStyle {
 }
 
 public struct InlineCodeMarkdownConfiguration {
-    public let label: Text
+    public let code: String
     public let font: Font?
+
+    public var label: Text {
+        if #available(iOS 15, *) {
+            return Text(code)
+                .font(font?.monospaced() ?? .system(.body, design: .monospaced))
+        } else {
+            return Text(code)
+                .font(.system(.body, design: .monospaced))
+        }
+    }
 }
 
 public struct DefaultInlineCodeMarkdownStyle: InlineCodeMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> Text {
-        if #available(iOS 15, *) {
-            return configuration.label
-                .font(configuration.font?.monospaced() ?? .system(.body, design: .monospaced))
-        } else {
-            return configuration.label
-                .font(.system(.body, design: .monospaced))
-        }
+        configuration.label
     }
 }
 

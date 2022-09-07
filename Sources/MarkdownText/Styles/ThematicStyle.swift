@@ -23,7 +23,7 @@ public struct ThematicMarkdownConfiguration {
 public struct DefaultThematicMarkdownStyle: ThematicBreakMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        Divider()
+        configuration.label
     }
 }
 

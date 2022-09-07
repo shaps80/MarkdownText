@@ -18,13 +18,24 @@ public struct AnyQuoteMarkdownStyle: QuoteMarkdownStyle {
 
 public struct QuoteMarkdownConfiguration {
     public let paragraph: ParagraphMarkdownConfiguration
+
+    private struct Label: View {
+        let paragraph: ParagraphMarkdownConfiguration
+
+        var body: some View {
+            paragraph.label
+        }
+    }
+
+    public var label: some View {
+        Label(paragraph: paragraph)
+    }
 }
 
 public struct DefaultQuoteMarkdownStyle: QuoteMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        DefaultParagraphMarkdownStyle()
-            .makeBody(configuration: configuration.paragraph)
+        configuration.label
     }
 }
 

@@ -18,21 +18,24 @@ public struct AnyParagraphMarkdownStyle: ParagraphMarkdownStyle {
 
 public struct ParagraphMarkdownConfiguration {
     let inline: InlineMarkdownConfiguration
-}
 
-public struct DefaultParagraphMarkdownStyle: ParagraphMarkdownStyle {
-    struct Content: View {
-        let configuration: InlineMarkdownConfiguration
+    private struct Label: View {
+        let inline: InlineMarkdownConfiguration
 
         var body: some View {
-            InlineMarkdownStyle()
-                .makeBody(configuration: configuration)
+            inline.label
         }
     }
 
+    public var label: some View {
+        Label(inline: inline)
+    }
+}
+
+public struct DefaultParagraphMarkdownStyle: ParagraphMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.inline.label
+        configuration.label
     }
 }
 

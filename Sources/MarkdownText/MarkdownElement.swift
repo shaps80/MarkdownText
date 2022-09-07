@@ -31,7 +31,7 @@ public struct UnorderedItem {
 }
 
 internal struct Component {
-    var text: Text
+    var text: String
     var attributes: Attribute = []
 }
 

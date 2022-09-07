@@ -1,26 +1,23 @@
 import SwiftUI
 
 struct InlineMarkdownConfiguration {
-    struct Content: View {
+    struct Label: View {
         @Environment(\.font) private var font
         @Environment(\.markdownStrongStyle) private var strong
         @Environment(\.markdownEmphasisStyle) private var emphasis
         @Environment(\.markdownStrikethroughStyle) private var strikethrough
+        @Environment(\.markdownInlineCodeStyle) private var code
 
         let components: [Component]
 
         var body: some View {
             components.reduce(into: Text("")) { result, component in
                 if component.attributes.contains(.code) {
-                    if #available(iOS 15, *) {
-                        return result = result + component.text
-                            .font(font?.monospaced() ?? .system(.body, design: .monospaced))
-                    } else {
-                        return result = result + component.text
-                            .font(.system(.body, design: .monospaced))
-                    }
+                    return result = result + code.makeBody(
+                        configuration: .init(code: component.text, font: font)
+                    )
                 } else {
-                    return result = result + component.text.apply(
+                    return result = result + Text(component.text).apply(
                         strong: strong,
                         emphasis: emphasis,
                         strikethrough: strikethrough,
@@ -34,7 +31,7 @@ struct InlineMarkdownConfiguration {
     let components: [Component]
 
     public var label: some View {
-        Content(components: components)
+        Label(components: components)
     }
 }
 

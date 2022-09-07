@@ -19,7 +19,6 @@ public struct AnyHeaderStyle: HeaderMarkdownStyle {
 public struct HeaderMarkdownConfiguration {
     public let level: Int
     let inline: InlineMarkdownConfiguration
-    public var label: some View { inline.label }
 
     public var preferredStyle: Font.TextStyle {
         switch level {
@@ -40,13 +39,26 @@ public struct HeaderMarkdownConfiguration {
         default: return .subheadline
         }
     }
+
+    private struct Label: View {
+        public let level: Int
+        let inline: InlineMarkdownConfiguration
+
+        var body: some View {
+            inline.label
+        }
+    }
+
+    public var label: some View {
+        Label(level: level, inline: inline)
+            .font(.system(preferredStyle).weight(.bold))
+    }
 }
 
 public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(configuration.preferredStyle).weight(.bold))
     }
 }
 
