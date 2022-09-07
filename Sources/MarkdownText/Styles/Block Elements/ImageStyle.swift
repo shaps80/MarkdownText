@@ -37,9 +37,6 @@ public struct ImageMarkdownConfiguration {
                     }
                 }
                 .frame(maxWidth: .infinity)
-            } else {
-                Rectangle()
-                    .foregroundColor(Color(.quaternarySystemFill))
             }
         }
     }

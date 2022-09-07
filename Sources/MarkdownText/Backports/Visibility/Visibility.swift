@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 12)
 @available(tvOS, deprecated: 15)
 @available(watchOS, deprecated: 8)
-extension Backport where Wrapped == Any {
+public extension Backport where Wrapped == Any {
 
     enum Visibility: Hashable, CaseIterable {
         /// The element may be visible or hidden depending on the policies of the

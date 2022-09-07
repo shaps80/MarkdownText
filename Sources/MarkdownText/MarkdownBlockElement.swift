@@ -8,7 +8,7 @@ public enum MarkdownListElement {
 }
 
 enum MarkdownBlockElement {
-    case header(HeaderMarkdownConfiguration)
+    case header(HeadingMarkdownConfiguration)
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
     case list(ListStyleMarkdownConfiguration)

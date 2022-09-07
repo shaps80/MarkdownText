@@ -28,7 +28,7 @@ import ObjectiveC
 ///         }
 ///     }
 ///
-struct Backport<Wrapped> {
+public struct Backport<Wrapped> {
 
     /// The underlying content this backport represents.
     let wrapped: Wrapped

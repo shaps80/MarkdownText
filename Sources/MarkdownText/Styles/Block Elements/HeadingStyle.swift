@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol HeaderMarkdownStyle {
+public protocol HeadingMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = HeaderMarkdownConfiguration
+    typealias Configuration = HeadingMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyHeaderMarkdownStyle: HeaderMarkdownStyle {
+public struct AnyHeadingMarkdownStyle: HeadingMarkdownStyle {
     var label: (Configuration) -> AnyView
-    init<S: HeaderMarkdownStyle>(_ style: S) {
+    init<S: HeadingMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +16,7 @@ public struct AnyHeaderMarkdownStyle: HeaderMarkdownStyle {
     }
 }
 
-public struct HeaderMarkdownConfiguration {
+public struct HeadingMarkdownConfiguration {
     public let level: Int
     let inline: InlineMarkdownConfiguration
 
@@ -55,30 +55,30 @@ public struct HeaderMarkdownConfiguration {
     }
 }
 
-public struct DefaultHeaderMarkdownStyle: HeaderMarkdownStyle {
+public struct DefaultHeadingMarkdownStyle: HeadingMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension HeaderMarkdownStyle where Self == DefaultHeaderMarkdownStyle {
+public extension HeadingMarkdownStyle where Self == DefaultHeadingMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
-private struct HeaderMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyHeaderMarkdownStyle(.default)
+private struct HeadingMarkdownEnvironmentKey: EnvironmentKey {
+    static let defaultValue = AnyHeadingMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownHeadingStyle: AnyHeaderMarkdownStyle {
-        get { self[HeaderMarkdownEnvironmentKey.self] }
-        set { self[HeaderMarkdownEnvironmentKey.self] = newValue }
+    var markdownHeadingStyle: AnyHeadingMarkdownStyle {
+        get { self[HeadingMarkdownEnvironmentKey.self] }
+        set { self[HeadingMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownHeadingStyle<S>(_ style: S) -> some View where S: HeaderMarkdownStyle {
-        environment(\.markdownHeadingStyle, AnyHeaderMarkdownStyle(style))
+    func markdownHeadingStyle<S>(_ style: S) -> some View where S: HeadingMarkdownStyle {
+        environment(\.markdownHeadingStyle, AnyHeadingMarkdownStyle(style))
     }
 }
