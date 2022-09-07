@@ -27,14 +27,21 @@ public struct ImageMarkdownConfiguration {
         var body: some View {
             if let source = source, let url = URL(string: source), url.scheme != nil {
                 Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
-                    switch phase {
-                    case let .success(image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    default:
-                        EmptyView()
+                    Group {
+                        switch phase {
+                        case let .success(image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        default:
+                            EmptyView()
+                        }
                     }
+//                    .backport.overlay {
+//                        if case .empty = phase {
+//                            Backport.ProgressView()
+//                        }
+//                    }
                 }
                 .frame(maxWidth: .infinity)
             }

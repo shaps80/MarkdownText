@@ -161,7 +161,8 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitImage(_ markdown: Markdown.Image) {
-        blockElements.append(.image(.init(source: markdown.source, title: markdown.title)))
+        let title = markdown.title ?? ""
+        blockElements.append(.image(.init(source: markdown.source, title: title.isEmpty ? nil : title)))
     }
 
     mutating func visitLink(_ markdown: Markdown.Link) {
@@ -227,6 +228,10 @@ struct MarkdownTextBuilder: MarkupWalker {
 
     mutating func visitTableHead(_ tableHead: Markdown.Table.Head) {
         #warning("TBD")
+    }
+
+    mutating func visitSoftBreak(_ markdown: SoftBreak) {
+        visitText(.init(markdown.plainText))
     }
 
     mutating func visitSymbolLink(_ markdown: SymbolLink) { }

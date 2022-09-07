@@ -28,10 +28,6 @@ private struct MarkdownContent: View {
                 if headingVisibility != .hidden {
                     headerStyle.makeBody(configuration: config)
                 }
-            case let .paragraph(config):
-                paragraphStyle.makeBody(configuration: config)
-            case let .inline(config):
-                inlineStyle.makeBody(configuration: config)
             case let .quote(config):
                 if quoteVisibility != .hidden {
                     quoteStyle.makeBody(configuration: config)
@@ -46,12 +42,22 @@ private struct MarkdownContent: View {
                 }
             case let .image(config):
                 if imageVisibility != .hidden {
-                    imageStyle.makeBody(configuration: config)
+                    if let source = config.source, let url = URL(string: source), url.host == "img.shields.io" {
+                        inlineStyle.makeBody(configuration: .init(components: [
+                            .init(text: .init(config.title ?? source))
+                        ]))
+                    } else {
+                        imageStyle.makeBody(configuration: config)
+                    }
                 }
             case let .list(config):
                 if listVisibility != .hidden {
                     listStyle.makeBody(configuration: config)
                 }
+            case let .paragraph(config):
+                paragraphStyle.makeBody(configuration: config)
+            case let .inline(config):
+                inlineStyle.makeBody(configuration: config)
             }
         }
     }
