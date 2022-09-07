@@ -34,6 +34,7 @@ struct InlineMarkdownConfiguration {
 
     public var label: some View {
         Label(components: components)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 

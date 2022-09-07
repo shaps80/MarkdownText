@@ -100,41 +100,11 @@ public struct MarkdownText: View, MarkupWalker {
 }
 
 struct MarkdownText_Previews: PreviewProvider {
-    static let text = """
-    # Large title
-
-    ## Title 1
-    ### Title 2
-    #### Title 3
-    ##### Headline
-    ###### Subheadline
-
-    A opening paragraph from [Apple](apple.com)
-
-    Some `inline` code
-
-    ```
-    func foo() { }
-    ```
-
-    > A blockquote
-    > with multiple lines
-
-    *Emphasized* **strong**
-    A soft break
-
-    1. First list item
-    3. Second list item
-
-    - An
-    - unordered
-    - list
-
-    Another paragraph
-
-    - [ ] Unchecked
-    - [x] Checked
-    """
+    static var text: String {
+        let url = Bundle.main.url(forResource: "Markdown", withExtension: "md")!
+        let data = try! Data(contentsOf: url)
+        return String(decoding: data, as: UTF8.self)
+    }
 
     static var previews: some View {
         MarkdownText(text)

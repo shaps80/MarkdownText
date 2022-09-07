@@ -213,10 +213,6 @@ struct MarkdownTextBuilder: MarkupWalker {
         isNested = false
     }
 
-    mutating func visitInlineHTML(_ markdown: InlineHTML) {
-        #warning("TBD")
-    }
-
     mutating func visitTable(_ markdown: Markdown.Table) {
         #warning("TBD")
     }
@@ -240,4 +236,6 @@ struct MarkdownTextBuilder: MarkupWalker {
     mutating func visitSymbolLink(_ markdown: SymbolLink) { }
     mutating func visitBlockDirective(_ markdown: BlockDirective) { }
     mutating func visitCustomInline(_ customInline: CustomInline) { }
+    mutating func visitHTMLBlock(_ markdown: HTMLBlock) { }
+    mutating func visitInlineHTML(_ markdown: InlineHTML) { }
 }

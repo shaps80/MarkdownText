@@ -25,20 +25,21 @@ public struct ImageMarkdownConfiguration {
         public let title: String?
 
         var body: some View {
-            if let source = source {
-                if let url = URL(string: source), url.scheme != nil {
-                    Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
-                        switch phase {
-                        case let .success(image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                        default:
-                            EmptyView()
-                        }
+            if let source = source, let url = URL(string: source), url.scheme != nil {
+                Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
+                    switch phase {
+                    case let .success(image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    default:
+                        EmptyView()
                     }
-                    .frame(maxWidth: .infinity)
                 }
+                .frame(maxWidth: .infinity)
+            } else {
+                Rectangle()
+                    .foregroundColor(Color(.quaternarySystemFill))
             }
         }
     }
