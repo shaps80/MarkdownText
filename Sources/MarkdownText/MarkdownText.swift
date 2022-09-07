@@ -119,17 +119,3 @@ public struct MarkdownText: View, MarkupWalker {
         content
     }
 }
-
-struct MarkdownText_Previews: PreviewProvider {
-    static var text: String {
-        let url = Bundle.main.url(forResource: "Markdown", withExtension: "md")!
-        let data = try! Data(contentsOf: url)
-        return String(decoding: data, as: UTF8.self)
-    }
-
-    static var previews: some View {
-        MarkdownText(text)
-            .padding()
-            .previewLayout(.sizeThatFits)
-    }
-}
