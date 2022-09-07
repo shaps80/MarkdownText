@@ -64,28 +64,28 @@ struct MarkdownTextBuilder: MarkupWalker {
         descendInto(markdown)
 
         if let listItem = markdown.parent as? ListItem {
-            switch listStack.last {
-            case .ordered:
-                blockElements.append(.orderedListItem(.init(
-                    level: listStack.count - 1,
-                    bullet: .init(order: listItem.indexInParent + 1),
-                    paragraph: .init(inline: .init(components: inlineElements))))
-                )
-            default:
-                if let checkbox = listItem.checkbox {
-                    blockElements.append(.checklistItem(.init(
-                        level: listStack.count - 1,
-                        bullet: .init(isChecked: checkbox == .checked),
-                        paragraph: .init(inline: .init(components: inlineElements))))
-                    )
-                } else {
-                    blockElements.append(.unorderedListItem(.init(
-                        level: listStack.count - 1,
-                        bullet: .init(),
-                        paragraph: .init(inline: .init(components: inlineElements))))
-                    )
-                }
-            }
+//            switch listStack.last {
+//            case .ordered:
+//                blockElements.append(.orderedListItem(.init(
+//                    level: listStack.count - 1,
+//                    bullet: .init(order: listItem.indexInParent + 1),
+//                    paragraph: .init(inline: .init(components: inlineElements))))
+//                )
+//            default:
+//                if let checkbox = listItem.checkbox {
+//                    blockElements.append(.checklistItem(.init(
+//                        level: listStack.count - 1,
+//                        bullet: .init(isChecked: checkbox == .checked),
+//                        paragraph: .init(inline: .init(components: inlineElements))))
+//                    )
+//                } else {
+//                    blockElements.append(.unorderedListItem(.init(
+//                        level: listStack.count - 1,
+//                        bullet: .init(),
+//                        paragraph: .init(inline: .init(components: inlineElements))))
+//                    )
+//                }
+//            }
         } else {
             if isNested {
                 nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))

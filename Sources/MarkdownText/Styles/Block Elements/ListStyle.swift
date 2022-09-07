@@ -18,25 +18,33 @@ public struct AnyListMarkdownStyle: ListMarkdownStyle {
 
 public struct ListStyleMarkdownConfiguration {
     private struct Label: View {
+        @Environment(\.markdownListStyle) private var list
         @Environment(\.markdownUnorderedListItemStyle) private var unordered
         @Environment(\.markdownOrderedListItemStyle) private var ordered
         @Environment(\.markdownCheckListItemStyle) private var checklist
         @Environment(\.lineSpacing) private var spacing
 
-        let paragraphs: [ParagraphMarkdownConfiguration]
+        let element: MarkdownListElement
 
         var body: some View {
             VStack(alignment: .leading, spacing: spacing) {
-                ForEach(paragraphs.indices, id: \.self) { index in
-                    paragraphs[index].label
+                switch element {
+                case let .ordered(config):
+                    ordered.makeBody(configuration: config)
+                case let .unordered(config):
+                    unordered.makeBody(configuration: config)
+                case let .checklist(config):
+                    checklist.makeBody(configuration: config)
+                case let .list(element):
+                    list.makeBody(configuration: .init(element: element))
                 }
             }
         }
     }
 
-    let paragraphs: [ParagraphMarkdownConfiguration]
+    let element: MarkdownListElement
     public var label: some View {
-        Label(paragraphs: paragraphs)
+        Label(element: element)
     }
 }
 

@@ -2,8 +2,8 @@ import SwiftUI
 
 indirect enum MarkdownListElement {
     case list(MarkdownListElement)
-    case ordered(OrderedBulletMarkdownConfiguration)
-    case unordered(UnorderedListMarkdownConfiguration)
+    case ordered(OrderedListItemMarkdownConfiguration)
+    case unordered(UnorderedListItemMarkdownConfiguration)
     case checklist(CheckListItemMarkdownConfiguration)
 }
 
@@ -12,10 +12,10 @@ enum MarkdownElement {
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
 
-//    case list(MarkdownListElement)
-    case orderedListItem(OrderedListItemMarkdownConfiguration)
-    case unorderedListItem(UnorderedListItemMarkdownConfiguration)
-    case checklistItem(CheckListItemMarkdownConfiguration)
+    case list(MarkdownListElement)
+//    case orderedListItem(OrderedListItemMarkdownConfiguration)
+//    case unorderedListItem(UnorderedListItemMarkdownConfiguration)
+//    case checklistItem(CheckListItemMarkdownConfiguration)
 
     case code(CodeMarkdownConfiguration)
     case thematicBreak(ThematicMarkdownConfiguration)

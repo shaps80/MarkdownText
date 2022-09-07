@@ -8,9 +8,7 @@ private struct MarkdownContent: View {
     @Environment(\.markdownQuoteStyle) private var quoteStyle
     @Environment(\.markdownCodeStyle) private var codeStyle
     @Environment(\.markdownThematicBreakStyle) private var thematicBreak
-    @Environment(\.markdownOrderedListItemStyle) private var orderedStyle
-    @Environment(\.markdownUnorderedListItemStyle) private var unorderedStyle
-    @Environment(\.markdownCheckListItemStyle) private var checkedStyle
+    @Environment(\.markdownListStyle) private var listStyle
     @Environment(\.markdownImageStyle) private var imageStyle
     private var inlineStyle = InlineMarkdownStyle()
 
@@ -25,18 +23,14 @@ private struct MarkdownContent: View {
                 inlineStyle.makeBody(configuration: config)
             case let .quote(config):
                 quoteStyle.makeBody(configuration: config)
-            case let .orderedListItem(config):
-                orderedStyle.makeBody(configuration: config)
-            case let .unorderedListItem(config):
-                unorderedStyle.makeBody(configuration: config)
-            case let .checklistItem(config):
-                checkedStyle.makeBody(configuration: config)
             case let .code(config):
                 codeStyle.makeBody(configuration: config)
             case let .thematicBreak(config):
                 thematicBreak.makeBody(configuration: config)
             case let .image(config):
                 imageStyle.makeBody(configuration: config)
+            case let .list(element):
+                listStyle.makeBody(configuration: .init(element: element))
             }
         }
     }
