@@ -22,9 +22,10 @@ public struct ListStyleMarkdownConfiguration {
         @Environment(\.markdownUnorderedListItemStyle) private var unordered
         @Environment(\.markdownOrderedListItemStyle) private var ordered
         @Environment(\.markdownCheckListItemStyle) private var checklist
-        @Environment(\.lineSpacing) private var spacing
+        @Backport.ScaledMetric private var spacing: CGFloat = 8
 
         let markdownList: MarkdownList
+        let level: Int
 
         var body: some View {
             VStack(alignment: .leading, spacing: spacing) {
@@ -37,7 +38,7 @@ public struct ListStyleMarkdownConfiguration {
                     case let .checklist(config):
                         checklist.makeBody(configuration: config)
                     case let .list(nested):
-                        list.makeBody(configuration: .init(markdownList: nested))
+                        list.makeBody(configuration: .init(markdownList: nested, level: level + 1))
                     }
                 }
             }
@@ -45,8 +46,10 @@ public struct ListStyleMarkdownConfiguration {
     }
 
     let markdownList: MarkdownList
+    public let level: Int
+
     public var label: some View {
-        Label(markdownList: markdownList)
+        Label(markdownList: markdownList, level: level)
     }
 }
 

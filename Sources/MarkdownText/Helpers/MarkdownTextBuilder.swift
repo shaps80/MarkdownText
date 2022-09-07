@@ -69,7 +69,7 @@ struct MarkdownTextBuilder: MarkupWalker {
             }
 
             if let link = parent as? Markdown.Link {
-                #warning("todo: Links")
+                #warning("Links")
                 /*
                  One idea here could be to collect links like footnotes, reference them in the rendered result as such (at least by default) and then add actual buttons to the bottom of the rendered output?
                  */
@@ -86,7 +86,14 @@ struct MarkdownTextBuilder: MarkupWalker {
         descendInto(markdown)
 
         if let list = lists.last {
-            blockElements.append(.list(.init(markdownList: list)))
+            if lists.count == 1 {
+                // if we're at the root element, add the the tree to the block elements
+                blockElements.append(.list(.init(markdownList: list, level: lists.count - 1)))
+            } else {
+                // otherwise, append nested lists to the last list
+                let index = lists.index(before: lists.index(before: lists.endIndex))
+                lists[index].append(nested: list)
+            }
         }
 
         lists.removeLast()
@@ -97,7 +104,14 @@ struct MarkdownTextBuilder: MarkupWalker {
         descendInto(markdown)
 
         if let list = lists.last {
-            blockElements.append(.list(.init(markdownList: list)))
+            if lists.count == 1 {
+                // if we're at the root element, add the the tree to the block elements
+                blockElements.append(.list(.init(markdownList: list, level: lists.count - 1)))
+            } else {
+                // otherwise, append nested lists to the last list
+                let index = lists.index(before: lists.index(before: lists.endIndex))
+                lists[index].append(nested: list)
+            }
         }
 
         lists.removeLast()
@@ -110,32 +124,31 @@ struct MarkdownTextBuilder: MarkupWalker {
     mutating func visitParagraph(_ markdown: Paragraph) {
         descendInto(markdown)
 
-        if let listItem = markdown.parent as? ListItem, var list = lists.last {
-            switch list.type {
+        if let listItem = markdown.parent as? ListItem {
+            let index = lists.index(before: lists.endIndex)
+
+            switch lists[index].type {
             case .ordered:
-                list.append(ordered: .init(
-                    level: list.elements.count - 1,
+                lists[index].append(ordered: .init(
+                    level: lists.count - 1,
                     bullet: .init(order: listItem.indexInParent + 1),
                     paragraph: .init(inline: .init(components: inlineElements)))
                 )
             default:
                 if let checkbox = listItem.checkbox {
-                    list.append(checklist: .init(
-                        level: list.elements.count - 1,
+                    lists[index].append(checklist: .init(
+                        level: lists.count - 1,
                         bullet: .init(isChecked: checkbox == .checked),
                         paragraph: .init(inline: .init(components: inlineElements)))
                     )
                 } else {
-                    list.append(unordered: .init(
-                        level: list.elements.count - 1,
-                        bullet: .init(level: list.elements.count - 1),
+                    lists[index].append(unordered: .init(
+                        level: lists.count - 1,
+                        bullet: .init(level: lists.count - 1),
                         paragraph: .init(inline: .init(components: inlineElements)))
                     )
                 }
             }
-
-            let index = list.elements.index(before: list.elements.endIndex)
-            list.elements.replaceSubrange(index...index, with: list.elements)
         } else {
             if isNested {
                 nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
