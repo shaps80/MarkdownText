@@ -7,7 +7,7 @@ public protocol CodeMarkdownStyle {
 }
 
 public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
-    var label: (CodeMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: CodeMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

@@ -7,7 +7,7 @@ public protocol UnorderedBulletMarkdownStyle {
 }
 
 public struct AnyUnorderedBulletMarkdownStyle: UnorderedBulletMarkdownStyle {
-    var label: (UnorderedBulletMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: UnorderedBulletMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

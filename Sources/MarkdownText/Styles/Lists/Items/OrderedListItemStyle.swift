@@ -7,7 +7,7 @@ public protocol OrderedListItemMarkdownStyle {
 }
 
 public struct AnyOrderedListItemMarkdownStyle: OrderedListItemMarkdownStyle {
-    var label: (OrderedListItemMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: OrderedListItemMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
@@ -53,14 +53,14 @@ public struct OrderedListItemMarkdownConfiguration {
     }
 }
 
-public struct DefaultOrderedListMarkdownStyle: OrderedListItemMarkdownStyle {
+public struct DefaultOrderedListItemMarkdownStyle: OrderedListItemMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension OrderedListItemMarkdownStyle where Self == DefaultOrderedListMarkdownStyle {
+public extension OrderedListItemMarkdownStyle where Self == DefaultOrderedListItemMarkdownStyle {
     static var `default`: Self { .init() }
 }
 

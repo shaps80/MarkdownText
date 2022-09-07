@@ -7,7 +7,7 @@ public protocol ChecklistBulletMarkdownStyle {
 }
 
 public struct AnyChecklistBulletMarkdownStyle: ChecklistBulletMarkdownStyle {
-    var label: (ChecklistBulletMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: ChecklistBulletMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

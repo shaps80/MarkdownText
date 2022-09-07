@@ -7,7 +7,7 @@ public protocol UnorderedListItemMarkdownStyle {
 }
 
 public struct AnyUnorderedListItemMarkdownStyle: UnorderedListItemMarkdownStyle {
-    var label: (UnorderedListItemMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: UnorderedListItemMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
@@ -53,14 +53,14 @@ public struct UnorderedListItemMarkdownConfiguration {
     }
 }
 
-public struct DefaultUnorderedListMarkdownStyle: UnorderedListItemMarkdownStyle {
+public struct DefaultUnorderedListItemMarkdownStyle: UnorderedListItemMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension UnorderedListItemMarkdownStyle where Self == DefaultUnorderedListMarkdownStyle {
+public extension UnorderedListItemMarkdownStyle where Self == DefaultUnorderedListItemMarkdownStyle {
     static var `default`: Self { .init() }
 }
 

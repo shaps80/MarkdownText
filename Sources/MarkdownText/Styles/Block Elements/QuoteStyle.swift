@@ -7,7 +7,7 @@ public protocol QuoteMarkdownStyle {
 }
 
 public struct AnyQuoteMarkdownStyle: QuoteMarkdownStyle {
-    var label: (QuoteMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: QuoteMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

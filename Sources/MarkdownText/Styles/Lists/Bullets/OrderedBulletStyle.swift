@@ -7,7 +7,7 @@ public protocol OrderedBulletMarkdownStyle {
 }
 
 public struct AnyOrderedBulletMarkdownStyle: OrderedBulletMarkdownStyle {
-    var label: (OrderedBulletMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: OrderedBulletMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

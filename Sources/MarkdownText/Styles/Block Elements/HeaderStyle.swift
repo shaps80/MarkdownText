@@ -7,7 +7,7 @@ public protocol HeaderMarkdownStyle {
 }
 
 public struct AnyHeaderStyle: HeaderMarkdownStyle {
-    var label: (HeaderMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: HeaderMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

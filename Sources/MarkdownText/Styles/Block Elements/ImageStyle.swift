@@ -7,7 +7,7 @@ public protocol ImageMarkdownStyle {
 }
 
 public struct AnyImageMarkdownStyle: ImageMarkdownStyle {
-    var label: (ImageMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: ImageMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol ChecklistMarkdownStyle {
+public protocol CheckListItemMarkdownStyle {
     associatedtype Body: View
     typealias Configuration = CheckListItemMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyCheckListItemMarkdownStyle: ChecklistMarkdownStyle {
-    var label: (CheckListItemMarkdownConfiguration) -> AnyView
-    init<S: ChecklistMarkdownStyle>(_ style: S) {
+public struct AnyCheckListItemMarkdownStyle: CheckListItemMarkdownStyle {
+    var label: (Configuration) -> AnyView
+    init<S: CheckListItemMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -53,14 +53,14 @@ public struct CheckListItemMarkdownConfiguration {
     }
 }
 
-public struct DefaultChecklistMarkdownStyle: ChecklistMarkdownStyle {
+public struct DefaultCheckListItemMarkdownStyle: CheckListItemMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension ChecklistMarkdownStyle where Self == DefaultChecklistMarkdownStyle {
+public extension CheckListItemMarkdownStyle where Self == DefaultCheckListItemMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
@@ -76,7 +76,7 @@ public extension EnvironmentValues {
 }
 
 public extension View {
-    func markdownCheckListItemStyle<S>(_ style: S) -> some View where S: ChecklistMarkdownStyle {
+    func markdownCheckListItemStyle<S>(_ style: S) -> some View where S: CheckListItemMarkdownStyle {
         environment(\.markdownCheckListItemStyle, AnyCheckListItemMarkdownStyle(style))
     }
 }

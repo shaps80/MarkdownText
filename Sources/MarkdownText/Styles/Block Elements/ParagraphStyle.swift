@@ -7,7 +7,7 @@ public protocol ParagraphMarkdownStyle {
 }
 
 public struct AnyParagraphMarkdownStyle: ParagraphMarkdownStyle {
-    var label: (ParagraphMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: ParagraphMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }

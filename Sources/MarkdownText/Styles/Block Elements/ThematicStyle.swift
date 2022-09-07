@@ -7,7 +7,7 @@ public protocol ThematicBreakMarkdownStyle {
 }
 
 public struct AnyThematicMarkdownStyle: ThematicBreakMarkdownStyle {
-    var label: (ThematicMarkdownConfiguration) -> AnyView
+    var label: (Configuration) -> AnyView
     init<S: ThematicBreakMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
