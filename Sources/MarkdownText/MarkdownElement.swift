@@ -5,9 +5,9 @@ enum MarkdownElement {
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
 
-    case orderedList(OrderedListMarkdownConfiguration)
-    case unorderedList(UnorderedListMarkdownConfiguration)
-    case checklist(ChecklistMarkdownConfiguration)
+    case orderedListItem(OrderedListItemMarkdownConfiguration)
+    case unorderedListItem(UnorderedListItemMarkdownConfiguration)
+    case checklistItem(CheckListItemMarkdownConfiguration)
 
     case code(CodeMarkdownConfiguration)
     case thematicBreak(ThematicMarkdownConfiguration)

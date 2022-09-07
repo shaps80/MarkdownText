@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol UnorderedListMarkdownStyle {
+public protocol UnorderedListItemMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = UnorderedListMarkdownConfiguration
+    typealias Configuration = UnorderedListItemMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
-    var label: (UnorderedListMarkdownConfiguration) -> AnyView
-    init<S: UnorderedListMarkdownStyle>(_ style: S) {
+public struct AnyUnorderedListItemMarkdownStyle: UnorderedListItemMarkdownStyle {
+    var label: (UnorderedListItemMarkdownConfiguration) -> AnyView
+    init<S: UnorderedListItemMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +16,7 @@ public struct AnyUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
     }
 }
 
-public struct UnorderedListMarkdownConfiguration {
+public struct UnorderedListItemMarkdownConfiguration {
     public let level: Int
     public let bullet: UnorderedBulletMarkdownConfiguration
     public let paragraph: ParagraphMarkdownConfiguration
@@ -53,30 +53,30 @@ public struct UnorderedListMarkdownConfiguration {
     }
 }
 
-public struct DefaultUnorderedListMarkdownStyle: UnorderedListMarkdownStyle {
+public struct DefaultUnorderedListMarkdownStyle: UnorderedListItemMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension UnorderedListMarkdownStyle where Self == DefaultUnorderedListMarkdownStyle {
+public extension UnorderedListItemMarkdownStyle where Self == DefaultUnorderedListMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
 private struct UnorderedListMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyUnorderedListMarkdownStyle(.default)
+    static let defaultValue = AnyUnorderedListItemMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownUnorderedListStyle: AnyUnorderedListMarkdownStyle {
+    var markdownUnorderedListItemStyle: AnyUnorderedListItemMarkdownStyle {
         get { self[UnorderedListMarkdownEnvironmentKey.self] }
         set { self[UnorderedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownUnorderedListStyle<S>(_ style: S) -> some View where S: UnorderedListMarkdownStyle {
-        environment(\.markdownUnorderedListStyle, AnyUnorderedListMarkdownStyle(style))
+    func markdownUnorderedListItemStyle<S>(_ style: S) -> some View where S: UnorderedListItemMarkdownStyle {
+        environment(\.markdownUnorderedListItemStyle, AnyUnorderedListItemMarkdownStyle(style))
     }
 }

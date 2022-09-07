@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol OrderedListMarkdownStyle {
+public protocol OrderedListItemMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = OrderedListMarkdownConfiguration
+    typealias Configuration = OrderedListItemMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyOrderedListMarkdownStyle: OrderedListMarkdownStyle {
-    var label: (OrderedListMarkdownConfiguration) -> AnyView
-    init<S: OrderedListMarkdownStyle>(_ style: S) {
+public struct AnyOrderedListItemMarkdownStyle: OrderedListItemMarkdownStyle {
+    var label: (OrderedListItemMarkdownConfiguration) -> AnyView
+    init<S: OrderedListItemMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +16,7 @@ public struct AnyOrderedListMarkdownStyle: OrderedListMarkdownStyle {
     }
 }
 
-public struct OrderedListMarkdownConfiguration {
+public struct OrderedListItemMarkdownConfiguration {
     public let level: Int
     public let bullet: OrderedBulletMarkdownConfiguration
     public let paragraph: ParagraphMarkdownConfiguration
@@ -53,30 +53,30 @@ public struct OrderedListMarkdownConfiguration {
     }
 }
 
-public struct DefaultOrderedListMarkdownStyle: OrderedListMarkdownStyle {
+public struct DefaultOrderedListMarkdownStyle: OrderedListItemMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension OrderedListMarkdownStyle where Self == DefaultOrderedListMarkdownStyle {
+public extension OrderedListItemMarkdownStyle where Self == DefaultOrderedListMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
 private struct OrderedListMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyOrderedListMarkdownStyle(.default)
+    static let defaultValue = AnyOrderedListItemMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownOrderedListStyle: AnyOrderedListMarkdownStyle {
+    var markdownOrderedListItemStyle: AnyOrderedListItemMarkdownStyle {
         get { self[OrderedListMarkdownEnvironmentKey.self] }
         set { self[OrderedListMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownOrderedListStyle<S>(_ style: S) -> some View where S: OrderedListMarkdownStyle {
-        environment(\.markdownOrderedListStyle, AnyOrderedListMarkdownStyle(style))
+    func markdownOrderedListItemStyle<S>(_ style: S) -> some View where S: OrderedListItemMarkdownStyle {
+        environment(\.markdownOrderedListItemStyle, AnyOrderedListItemMarkdownStyle(style))
     }
 }

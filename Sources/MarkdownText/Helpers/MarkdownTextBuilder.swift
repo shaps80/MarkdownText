@@ -2,24 +2,22 @@ import SwiftUI
 import Markdown
 
 struct MarkdownTextBuilder: MarkupWalker {
-    enum ListType {
+    enum ListItemType {
         case unordered
         case ordered
-        case checklist
     }
 
     var components: [Component] = []
     var elements: [MarkdownElement] = []
     var isNested: Bool = false
     var nestedElements: [MarkdownElement] = []
-    var listStack: [ListType] = []
+    var listStack: [ListItemType] = []
 
     init(document: Document) {
         visit(document)
     }
 
     mutating func visitHeading(_ markdown: Heading) {
-        print("Heading | \(markdown.level)")
         descendInto(markdown)
         elements.append(.header(.init(level: markdown.level, inline: .init(components: components))))
         components = []
@@ -49,35 +47,53 @@ struct MarkdownTextBuilder: MarkupWalker {
             parent = parent?.parent
         }
 
-        if attributes.isEmpty {
-            print("|\(markdown.string)|")
-        } else {
-            print("|\(markdown.string)| \(attributes.description)")
-        }
-
         components.append(.init(text: .init(markdown.string), attributes: attributes))
     }
 
     mutating func visitParagraph(_ markdown: Paragraph) {
-        print("Paragraph")
         descendInto(markdown)
 
-        if isNested {
-            nestedElements.append(.paragraph(.init(inline: .init(components: components))))
+        if let listItem = markdown.parent as? ListItem {
+            switch listStack.last {
+            case .ordered:
+                elements.append(.orderedListItem(.init(
+                    level: listStack.count - 1,
+                    bullet: .init(order: listItem.indexInParent + 1),
+                    paragraph: .init(inline: .init(components: components))))
+                )
+            default:
+                if let checkbox = listItem.checkbox {
+                    elements.append(.checklistItem(.init(
+                        level: listStack.count - 1,
+                        bullet: .init(isChecked: checkbox == .checked),
+                        paragraph: .init(inline: .init(components: components))))
+                    )
+                } else {
+                    elements.append(.unorderedListItem(.init(
+                        level: listStack.count - 1,
+                        bullet: .init(),
+                        paragraph: .init(inline: .init(components: components))))
+                    )
+                }
+            }
         } else {
-            elements.append(.paragraph(.init(inline: .init(components: components))))
+            if isNested {
+                nestedElements.append(.paragraph(.init(inline: .init(components: components))))
+            } else {
+                elements.append(.paragraph(.init(inline: .init(components: components))))
+            }
         }
 
         components = []
     }
 
     mutating func visitImage(_ markdown: Markdown.Image) {
-        print("Image")
+//        print("Image")
         descendInto(markdown)
     }
 
     mutating func visitLink(_ markdown: Markdown.Link) {
-        print("Link")
+//        print("Link")
         descendInto(markdown)
     }
 
@@ -90,7 +106,6 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitInlineCode(_ markdown: InlineCode) {
-        print("|\(markdown.code)| \(Attribute.code.description)")
         components.append(.init(text: .init(markdown.code), attributes: .code))
     }
 
@@ -99,7 +114,6 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitCodeBlock(_ markdown: CodeBlock) {
-        print("Code")
         elements.append(.code(.init(code: markdown.code, language: markdown.language)))
         components = []
     }
@@ -128,45 +142,12 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitListItem(_ markdown: Markdown.ListItem) {
-        isNested = true
         print("List item")
         descendInto(markdown)
-
-        for element in nestedElements {
-            if case let .paragraph(config) = element {
-                switch listStack.last {
-                case .ordered:
-                    elements.append(.orderedList(.init(
-                        level: listStack.count - 1,
-                        bullet: .init(order: markdown.indexInParent + 1),
-                        paragraph: config))
-                    )
-                default:
-                    if let checkbox = markdown.checkbox {
-                        elements.append(.checklist(.init(
-                            level: listStack.count - 1,
-                            bullet: .init(isChecked: checkbox == .checked),
-                            paragraph: config))
-                        )
-                    } else {
-                        elements.append(.unorderedList(.init(
-                            level: listStack.count - 1,
-                            bullet: .init(),
-                            paragraph: config))
-                        )
-                    }
-                }
-            }
-        }
-
-        components = []
-        nestedElements = []
-        isNested = false
     }
 
     mutating func visitBlockQuote(_ markdown: BlockQuote) {
         isNested = true
-        print("Quote")
         descendInto(markdown)
 
         for element in nestedElements {
@@ -181,17 +162,17 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitCustomBlock(_ markdown: CustomBlock) {
-        print("Custom block")
+//        print("Custom block")
         descendInto(markdown)
     }
 
     mutating func visitCustomInline(_ markdown: CustomInline) {
-        print("Custom inline")
+//        print("Custom inline")
         descendInto(markdown)
     }
 
     mutating func visitBlockDirective(_ markdown: BlockDirective) {
-        print("Block directive")
+//        print("Block directive")
         descendInto(markdown)
     }
 

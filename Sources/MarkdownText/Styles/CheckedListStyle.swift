@@ -2,12 +2,12 @@ import SwiftUI
 
 public protocol ChecklistMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = ChecklistMarkdownConfiguration
+    typealias Configuration = CheckListItemMarkdownConfiguration
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyChecklistMarkdownStyle: ChecklistMarkdownStyle {
-    var label: (ChecklistMarkdownConfiguration) -> AnyView
+public struct AnyCheckListItemMarkdownStyle: ChecklistMarkdownStyle {
+    var label: (CheckListItemMarkdownConfiguration) -> AnyView
     init<S: ChecklistMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
@@ -16,7 +16,7 @@ public struct AnyChecklistMarkdownStyle: ChecklistMarkdownStyle {
     }
 }
 
-public struct ChecklistMarkdownConfiguration {
+public struct CheckListItemMarkdownConfiguration {
     public let level: Int
     public let bullet: ChecklistBulletMarkdownConfiguration
     public let paragraph: ParagraphMarkdownConfiguration
@@ -64,19 +64,19 @@ public extension ChecklistMarkdownStyle where Self == DefaultChecklistMarkdownSt
     static var `default`: Self { .init() }
 }
 
-private struct CheckedListMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyChecklistMarkdownStyle(.default)
+private struct CheckListItemMarkdownEnvironmentKey: EnvironmentKey {
+    static let defaultValue = AnyCheckListItemMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
-    var markdownChecklistStyle: AnyChecklistMarkdownStyle {
-        get { self[CheckedListMarkdownEnvironmentKey.self] }
-        set { self[CheckedListMarkdownEnvironmentKey.self] = newValue }
+    var markdownCheckListItemStyle: AnyCheckListItemMarkdownStyle {
+        get { self[CheckListItemMarkdownEnvironmentKey.self] }
+        set { self[CheckListItemMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownChecklistStyle<S>(_ style: S) -> some View where S: ChecklistMarkdownStyle {
-        environment(\.markdownChecklistStyle, AnyChecklistMarkdownStyle(style))
+    func markdownCheckListItemStyle<S>(_ style: S) -> some View where S: ChecklistMarkdownStyle {
+        environment(\.markdownCheckListItemStyle, AnyCheckListItemMarkdownStyle(style))
     }
 }
