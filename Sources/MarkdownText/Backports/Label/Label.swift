@@ -85,18 +85,18 @@ extension Backport where Wrapped == Any {
     ///             .overlay(Text(person.initials))
     ///     }
     ///
-    public struct Label<Title, Icon>: View where Title: View, Icon: View {
+    struct Label<Title, Icon>: View where Title: View, Icon: View {
 
         @Environment(\.self) private var environment
         @Environment(\.backportLabelStyle) private var style
         private var config: Backport<Any>.LabelStyleConfiguration
 
         /// Creates a label with a custom title and icon.
-        public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
+        init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
             config = .init(title: .init(content: title()), icon: .init(content: icon()))
         }
 
-        @MainActor public var body: some View {
+        @MainActor var body: some View {
             if let style = style {
                 style.makeBody(configuration: config.environment(environment))
             } else {
@@ -116,7 +116,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     /// - Parameters:
     ///    - titleKey: A title generated from a localized string.
     ///    - image: The name of the image resource to lookup.
-    public init(_ titleKey: LocalizedStringKey, image name: String) {
+    init(_ titleKey: LocalizedStringKey, image name: String) {
         self.init(title: { Text(titleKey) }, icon: { Image(name) })
     }
 
@@ -125,7 +125,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     /// - Parameters:
     ///    - title: A string used as the label's title.
     ///    - image: The name of the image resource to lookup.
-    public init<S>(_ title: S, image name: String) where S: StringProtocol {
+    init<S>(_ title: S, image name: String) where S: StringProtocol {
         self.init(title: { Text(title) }, icon: { Image(name) })
     }
 
@@ -140,7 +140,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     /// - Parameters:
     ///    - titleKey: A title generated from a localized string.
     ///    - systemImage: The name of the image resource to lookup.
-    public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
+    init(_ titleKey: LocalizedStringKey, systemImage name: String) {
         self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
     }
 
@@ -150,7 +150,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     /// - Parameters:
     ///    - title: A string used as the label's title.
     ///    - systemImage: The name of the image resource to lookup.
-    public init<S>(_ title: S, systemImage name: String) where S: StringProtocol {
+    init<S>(_ title: S, systemImage name: String) where S: StringProtocol {
         self.init(title: { Text(title) }, icon: { Image(systemName: name) })
     }
 
@@ -177,7 +177,7 @@ extension Backport.Label where Wrapped == Any, Title == Backport.LabelStyleConfi
     ///     }
     ///
     /// - Parameter configuration: The label style to use.
-    public init(_ configuration: Backport.LabelStyleConfiguration) {
+    init(_ configuration: Backport.LabelStyleConfiguration) {
         self.config = configuration
     }
 

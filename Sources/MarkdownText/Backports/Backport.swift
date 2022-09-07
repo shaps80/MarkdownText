@@ -8,14 +8,14 @@ import ObjectiveC
 /// following extension:
 ///
 ///     extension Backport where Content == Any {
-///         public struct Label<Title, Icon> { }
+///         struct Label<Title, Icon> { }
 ///     }
 ///
 /// Now if we want to provide further extensions to our backport type,
 /// we need to ensure we retain the `Content == Any` generic requirement:
 ///
 ///     extension Backport.Label where Content == Any, Title == Text, Icon == Image {
-///         public init<S: StringProtocol>(_ title: S, systemName: String) { }
+///         init<S: StringProtocol>(_ title: S, systemName: String) { }
 ///     }
 ///
 /// In addition to types, we can also provide backports for properties
@@ -28,25 +28,25 @@ import ObjectiveC
 ///         }
 ///     }
 ///
-public struct Backport<Wrapped> {
+struct Backport<Wrapped> {
 
     /// The underlying content this backport represents.
-    public let wrapped: Wrapped
+    let wrapped: Wrapped
 
     /// Initializes a new Backport for the specified content.
     /// - Parameter content: The content (type) that's being backported
-    public init(_ wrapped: Wrapped) {
+    init(_ wrapped: Wrapped) {
         self.wrapped = wrapped
     }
 
 }
 
-public extension View {
+extension View {
     /// Wraps a SwiftUI `View` that can be extended to provide backport functionality.
     var backport: Backport<Self> { .init(self) }
 }
 
-public extension NSObjectProtocol {
+extension NSObjectProtocol {
     /// Wraps an `NSObject` that can be extended to provide backport functionality.
     var backport: Backport<Self> { .init(self) }
 }

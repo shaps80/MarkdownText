@@ -8,7 +8,7 @@ import SwiftUI
 ///
 /// To configure the current label style for a view hierarchy, use the
 /// ``View/labelStyle(_:)`` modifier.
-public protocol BackportLabelStyle {
+protocol BackportLabelStyle {
 
     /// The properties of a label.
     typealias Configuration = Backport<Any>.LabelStyleConfiguration
@@ -31,7 +31,7 @@ public protocol BackportLabelStyle {
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Wrapped: View {
+extension Backport where Wrapped: View {
     func labelStyle<S: BackportLabelStyle>(_ style: S) -> some View {
         wrapped.environment(\.backportLabelStyle, .init(style))
     }

@@ -6,7 +6,7 @@ import SwiftUI
 @available(watchOS, deprecated: 8)
 extension Backport where Wrapped == Any {
 
-    public enum Visibility: Hashable, CaseIterable {
+    enum Visibility: Hashable, CaseIterable {
         /// The element may be visible or hidden depending on the policies of the
         /// component accepting the visibility configuration.
         ///

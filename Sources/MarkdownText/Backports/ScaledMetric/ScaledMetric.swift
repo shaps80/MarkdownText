@@ -8,14 +8,14 @@ extension Backport where Wrapped == Any {
 
     /// A dynamic property that scales a numeric value.
     @propertyWrapper
-    public struct ScaledMetric<Value>: DynamicProperty where Value: BinaryFloatingPoint {
+    struct ScaledMetric<Value>: DynamicProperty where Value: BinaryFloatingPoint {
 
         @Environment(\.sizeCategory) private var sizeCategory
 
         private let baseValue: Value
         private let metrics: UIFontMetrics
 
-        public var wrappedValue: Value {
+        var wrappedValue: Value {
             let traits = UITraitCollection(traitsFrom: [
                 UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(sizeCategory))
             ])
@@ -24,7 +24,7 @@ extension Backport where Wrapped == Any {
         }
 
         /// Creates the scaled metric with an unscaled value and a text style to scale relative to.
-        public init(wrappedValue: Value, relativeTo textStyle: Font.TextStyle = .body) {
+        init(wrappedValue: Value, relativeTo textStyle: Font.TextStyle = .body) {
             self.baseValue = wrappedValue
             self.metrics = .init(forTextStyle: .init(textStyle))
         }

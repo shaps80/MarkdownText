@@ -131,13 +131,13 @@ extension Backport where Wrapped == Any {
         case failure(Error)
 
         /// The loaded image, if any.
-        public var image: Image? {
+        var image: Image? {
             guard case let .success(image) = self else { return nil }
             return image
         }
 
         /// The error that occurred when attempting to load an image, if any.
-        public var error: Error? {
+        var error: Error? {
             guard case let .failure(error) = self else { return nil }
             return error
         }
@@ -152,7 +152,7 @@ extension Backport where Wrapped == Any {
         var transaction: Transaction = .init()
         var content: (Backport<Any>.AsyncImagePhase) -> Content
 
-        public var body: some View {
+        var body: some View {
             ZStack {
                 content(phase)
             }

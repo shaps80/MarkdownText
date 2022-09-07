@@ -9,7 +9,7 @@ extension Backport where Wrapped == Any {
     /// The default label style in the current context.
     ///
     /// You can also use ``LabelStyle/automatic`` to construct this style.
-    public struct ListLabelStyle: BackportLabelStyle {
+    struct ListLabelStyle: BackportLabelStyle {
         struct Content: View {
             let configuration: Configuration
 
@@ -22,7 +22,7 @@ extension Backport where Wrapped == Any {
             }
         }
 
-        public init() { }
+        init() { }
 
         /// Creates a view that represents the body of a label.
         ///
@@ -30,7 +30,7 @@ extension Backport where Wrapped == Any {
         /// hierarchy where this style is the current label style.
         ///
         /// - Parameter configuration: The properties of the label.
-        public func makeBody(configuration: Configuration) -> some View {
+        func makeBody(configuration: Configuration) -> some View {
             Content(configuration: configuration)
         }
 
@@ -45,5 +45,5 @@ extension Backport where Wrapped == Any {
 extension BackportLabelStyle where Self == Backport<Any>.ListLabelStyle {
     /// A label style that resolves its appearance automatically based on the
     /// current context.
-    public static var list: Self { .init() }
+    static var list: Self { .init() }
 }
