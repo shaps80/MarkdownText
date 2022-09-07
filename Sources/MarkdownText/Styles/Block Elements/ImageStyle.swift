@@ -37,6 +37,7 @@ public struct ImageMarkdownConfiguration {
                             EmptyView()
                         }
                     }
+                    .frame(maxWidth: .infinity)
                 } else {
                     Image(systemName: source)
                 }
