@@ -27,17 +27,12 @@ private struct MarkdownContent: View {
                 quoteStyle.makeBody(configuration: config)
             case let .orderedList(config):
                 orderedStyle.makeBody(configuration: config)
-                    .environment(\.lineSpacing, 5)
             case let .unorderedList(config):
                 unorderedStyle.makeBody(configuration: config)
-                    .environment(\.lineSpacing, 5)
             case let .checklist(config):
                 checkedStyle.makeBody(configuration: config)
-                    .environment(\.lineSpacing, 5)
             case let .code(config):
                 codeStyle.makeBody(configuration: config)
-                    .environment(\.lineSpacing, 5)
-                    .environment(\.layoutDirection, .leftToRight)
             case let .thematicBreak(config):
                 thematicBreak.makeBody(configuration: config)
             case let .image(config):

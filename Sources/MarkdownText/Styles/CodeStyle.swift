@@ -28,15 +28,23 @@ public struct CodeMarkdownConfiguration {
 
         var body: some View {
             if #available(iOS 15, *) {
-                Text(code).font(font?.monospaced() ?? .system(.body, design: .monospaced))
+                Text(code.trimmingCharacters(in: .newlines))
+                    .font(
+                        font?.monospaced()
+                        ?? .system(.body, design: .monospaced)
+                    )
             } else {
-                Text(code).font(.system(.body, design: .monospaced))
+                Text(code.trimmingCharacters(in: .newlines))
+                    .font(.system(.body, design: .monospaced))
             }
         }
     }
 
     public var label: some View {
         Label(code: code, language: language)
+            .font(.callout)
+            .lineSpacing(5)
+            .environment(\.layoutDirection, .leftToRight)
     }
 }
 
