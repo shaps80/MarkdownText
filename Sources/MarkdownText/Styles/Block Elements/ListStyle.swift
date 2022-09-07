@@ -22,6 +22,11 @@ public struct ListStyleMarkdownConfiguration {
         @Environment(\.markdownUnorderedListItemStyle) private var unordered
         @Environment(\.markdownOrderedListItemStyle) private var ordered
         @Environment(\.markdownCheckListItemStyle) private var checklist
+
+        @Environment(\.markdownCheckListItemVisibility) private var checkListItemVisibility
+        @Environment(\.markdownUnorderedListItemVisibility) private var unorderedListItemVisibility
+        @Environment(\.markdownOrderedListItemVisibility) private var orderedListItemVisibility
+
         @Backport.ScaledMetric private var spacing: CGFloat = 8
 
         let markdownList: MarkdownList
@@ -32,11 +37,17 @@ public struct ListStyleMarkdownConfiguration {
                 ForEach(markdownList.elements.indices, id: \.self) { index in
                     switch markdownList.elements[index] {
                     case let .ordered(config):
-                        ordered.makeBody(configuration: config)
+                        if orderedListItemVisibility != .hidden {
+                            ordered.makeBody(configuration: config)
+                        }
                     case let .unordered(config):
-                        unordered.makeBody(configuration: config)
+                        if unorderedListItemVisibility != .hidden {
+                            unordered.makeBody(configuration: config)
+                        }
                     case let .checklist(config):
-                        checklist.makeBody(configuration: config)
+                        if checkListItemVisibility != .hidden {
+                            checklist.makeBody(configuration: config)
+                        }
                     case let .list(nested):
                         list.makeBody(configuration: .init(list: nested, level: level + 1))
                     }

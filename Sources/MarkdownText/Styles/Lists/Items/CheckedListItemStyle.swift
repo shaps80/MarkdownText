@@ -18,16 +18,16 @@ public struct AnyCheckListItemMarkdownStyle: CheckListItemMarkdownStyle {
 
 public struct CheckListItemMarkdownConfiguration {
     public let level: Int
-    public let bullet: ChecklistBulletMarkdownConfiguration
+    public let bullet: CheckListBulletMarkdownConfiguration
     public let paragraph: ParagraphMarkdownConfiguration
 
     struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
-        @Environment(\.markdownChecklistBulletStyle) private var bulletStyle
+        @Environment(\.markdownCheckListBulletStyle) private var bulletStyle
 
         public let level: Int
-        public let bullet: ChecklistBulletMarkdownConfiguration
+        public let bullet: CheckListBulletMarkdownConfiguration
         public let paragraph: ParagraphMarkdownConfiguration
 
         private var space: String {

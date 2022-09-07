@@ -18,16 +18,16 @@ public struct AnyUnorderedListItemMarkdownStyle: UnorderedListItemMarkdownStyle 
 
 public struct UnorderedListItemMarkdownConfiguration {
     public let level: Int
-    public let bullet: UnorderedBulletMarkdownConfiguration
+    public let bullet: UnorderedListBulletMarkdownConfiguration
     public let paragraph: ParagraphMarkdownConfiguration
 
     struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
-        @Environment(\.markdownUnorderedBulletStyle) private var bulletStyle
+        @Environment(\.markdownUnorderedListBulletStyle) private var bulletStyle
 
         public let level: Int
-        public let bullet: UnorderedBulletMarkdownConfiguration
+        public let bullet: UnorderedListBulletMarkdownConfiguration
         public let paragraph: ParagraphMarkdownConfiguration
 
         private var space: String {

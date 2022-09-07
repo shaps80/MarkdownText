@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol ChecklistBulletMarkdownStyle {
+public protocol CheckListBulletMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = ChecklistBulletMarkdownConfiguration
+    typealias Configuration = CheckListBulletMarkdownConfiguration
     func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyChecklistBulletMarkdownStyle: ChecklistBulletMarkdownStyle {
+public struct AnyCheckListBulletMarkdownStyle: CheckListBulletMarkdownStyle {
     var label: (Configuration) -> AnyView
-    init<S: ChecklistBulletMarkdownStyle>(_ style: S) {
+    init<S: CheckListBulletMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +16,7 @@ public struct AnyChecklistBulletMarkdownStyle: ChecklistBulletMarkdownStyle {
     }
 }
 
-public struct ChecklistBulletMarkdownConfiguration {
+public struct CheckListBulletMarkdownConfiguration {
     struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         public let isChecked: Bool
@@ -34,30 +34,30 @@ public struct ChecklistBulletMarkdownConfiguration {
     }
 }
 
-public struct DefaultChecklistBulletMarkdownStyle: ChecklistBulletMarkdownStyle {
+public struct DefaultChecklistBulletMarkdownStyle: CheckListBulletMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension ChecklistBulletMarkdownStyle where Self == DefaultChecklistBulletMarkdownStyle {
+public extension CheckListBulletMarkdownStyle where Self == DefaultChecklistBulletMarkdownStyle {
     static var `default`: Self { .init() }
 }
 
 private struct ChecklistBulletMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue: AnyChecklistBulletMarkdownStyle = .init(DefaultChecklistBulletMarkdownStyle())
+    static let defaultValue: AnyCheckListBulletMarkdownStyle = .init(DefaultChecklistBulletMarkdownStyle())
 }
 
 public extension EnvironmentValues {
-    var markdownChecklistBulletStyle: AnyChecklistBulletMarkdownStyle {
+    var markdownCheckListBulletStyle: AnyCheckListBulletMarkdownStyle {
         get { self[ChecklistBulletMarkdownEnvironmentKey.self] }
         set { self[ChecklistBulletMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownChecklistBulletStyle<S>(_ style: S) -> some View where S: ChecklistBulletMarkdownStyle {
-        environment(\.markdownChecklistBulletStyle, .init(style))
+    func markdownCheckListBulletStyle<S>(_ style: S) -> some View where S: CheckListBulletMarkdownStyle {
+        environment(\.markdownCheckListBulletStyle, .init(style))
     }
 }

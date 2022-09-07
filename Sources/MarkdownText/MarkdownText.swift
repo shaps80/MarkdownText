@@ -3,6 +3,7 @@ import Markdown
 
 private struct MarkdownContent: View {
     @Environment(\.multilineTextAlignment) private var alignment
+
     @Environment(\.markdownHeadingStyle) private var headerStyle
     @Environment(\.markdownParagraphStyle) private var paragraphStyle
     @Environment(\.markdownQuoteStyle) private var quoteStyle
@@ -10,27 +11,47 @@ private struct MarkdownContent: View {
     @Environment(\.markdownThematicBreakStyle) private var thematicBreak
     @Environment(\.markdownListStyle) private var listStyle
     @Environment(\.markdownImageStyle) private var imageStyle
+
+    @Environment(\.markdownCodeVisibility) private var codeVisibility
+    @Environment(\.markdownImageVisibility) private var imageVisibility
+    @Environment(\.markdownHeadingVisibility) private var headingVisibility
+    @Environment(\.markdownQuoteListVisibility) private var quoteVisibility
+    @Environment(\.markdownThematicBreakVisibility) private var thematicBreakVisibility
+    @Environment(\.markdownListVisibility) private var listVisibility
+
     private var inlineStyle = InlineMarkdownStyle()
 
     private var content: some View {
         ForEach(elements.indices, id: \.self) { index in
             switch elements[index] {
             case let .header(config):
-                headerStyle.makeBody(configuration: config)
+                if headingVisibility != .hidden {
+                    headerStyle.makeBody(configuration: config)
+                }
             case let .paragraph(config):
                 paragraphStyle.makeBody(configuration: config)
             case let .inline(config):
                 inlineStyle.makeBody(configuration: config)
             case let .quote(config):
-                quoteStyle.makeBody(configuration: config)
+                if quoteVisibility != .hidden {
+                    quoteStyle.makeBody(configuration: config)
+                }
             case let .code(config):
-                codeStyle.makeBody(configuration: config)
+                if codeVisibility != .hidden {
+                    codeStyle.makeBody(configuration: config)
+                }
             case let .thematicBreak(config):
-                thematicBreak.makeBody(configuration: config)
+                if thematicBreakVisibility != .hidden {
+                    thematicBreak.makeBody(configuration: config)
+                }
             case let .image(config):
-                imageStyle.makeBody(configuration: config)
+                if imageVisibility != .hidden {
+                    imageStyle.makeBody(configuration: config)
+                }
             case let .list(config):
-                listStyle.makeBody(configuration: config)
+                if listVisibility != .hidden {
+                    listStyle.makeBody(configuration: config)
+                }
             }
         }
     }

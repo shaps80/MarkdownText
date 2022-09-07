@@ -189,10 +189,6 @@ struct MarkdownTextBuilder: MarkupWalker {
         inlineElements = []
     }
 
-    mutating func visitSoftBreak(_ markdown: SoftBreak) {
-        visitText(.init(markdown.plainText))
-    }
-
     mutating func visitThematicBreak(_ markdown: ThematicBreak) {
         blockElements.append(.thematicBreak(.init()))
         descendInto(markdown)

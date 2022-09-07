@@ -1,14 +1,14 @@
 import SwiftUI
 
-public protocol OrderedBulletMarkdownStyle {
+public protocol OrderedListBulletMarkdownStyle {
     associatedtype Body: View
-    typealias Configuration = OrderedBulletMarkdownConfiguration
+    typealias Configuration = OrderedListBulletMarkdownConfiguration
     func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyOrderedBulletMarkdownStyle: OrderedBulletMarkdownStyle {
+public struct AnyOrderedListBulletMarkdownStyle: OrderedListBulletMarkdownStyle {
     var label: (Configuration) -> AnyView
-    init<S: OrderedBulletMarkdownStyle>(_ style: S) {
+    init<S: OrderedListBulletMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +16,7 @@ public struct AnyOrderedBulletMarkdownStyle: OrderedBulletMarkdownStyle {
     }
 }
 
-public struct OrderedBulletMarkdownConfiguration {
+public struct OrderedListBulletMarkdownConfiguration {
     struct Label: View {
         @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
         let order: Int
@@ -34,30 +34,30 @@ public struct OrderedBulletMarkdownConfiguration {
     }
 }
 
-public struct NumericallyOrderedBulletMarkdownStyle: OrderedBulletMarkdownStyle {
+public struct NumericallyOrderedListBulletMarkdownStyle: OrderedListBulletMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
-public extension OrderedBulletMarkdownStyle where Self == NumericallyOrderedBulletMarkdownStyle {
+public extension OrderedListBulletMarkdownStyle where Self == NumericallyOrderedListBulletMarkdownStyle {
     static var numerical: Self { .init() }
 }
 
 private struct OrderedBulletMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue: AnyOrderedBulletMarkdownStyle = .init(NumericallyOrderedBulletMarkdownStyle())
+    static let defaultValue: AnyOrderedListBulletMarkdownStyle = .init(NumericallyOrderedListBulletMarkdownStyle())
 }
 
 public extension EnvironmentValues {
-    var markdownOrderedBulletStyle: AnyOrderedBulletMarkdownStyle {
+    var markdownOrderedListBulletStyle: AnyOrderedListBulletMarkdownStyle {
         get { self[OrderedBulletMarkdownEnvironmentKey.self] }
         set { self[OrderedBulletMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
 public extension View {
-    func markdownOrderedBulletStyle<S>(_ style: S) -> some View where S: OrderedBulletMarkdownStyle {
-        environment(\.markdownOrderedBulletStyle, .init(style))
+    func markdownOrderedListBulletStyle<S>(_ style: S) -> some View where S: OrderedListBulletMarkdownStyle {
+        environment(\.markdownOrderedListBulletStyle, .init(style))
     }
 }
