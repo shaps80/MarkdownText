@@ -11,17 +11,11 @@ enum MarkdownElement {
     case header(HeaderMarkdownConfiguration)
     case paragraph(ParagraphMarkdownConfiguration)
     case quote(QuoteMarkdownConfiguration)
-
     case list(MarkdownListElement)
-//    case orderedListItem(OrderedListItemMarkdownConfiguration)
-//    case unorderedListItem(UnorderedListItemMarkdownConfiguration)
-//    case checklistItem(CheckListItemMarkdownConfiguration)
-
     case code(CodeMarkdownConfiguration)
-    case thematicBreak(ThematicMarkdownConfiguration)
-
-    case inline(InlineMarkdownConfiguration)
     case image(ImageMarkdownConfiguration)
+    case thematicBreak(ThematicMarkdownConfiguration)
+    case inline(InlineMarkdownConfiguration)
 }
 
 public struct ChecklistItem {
