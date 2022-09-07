@@ -12,6 +12,7 @@ struct MarkdownTextBuilder: MarkupWalker {
     var inlineElements: [Component] = []
     var blockElements: [MarkdownElement] = []
     var listStack: [ListItemType] = []
+    var lists: [MarkdownListElement] = []
 
     init(document: Document) {
         visit(document)

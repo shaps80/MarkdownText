@@ -1,5 +1,11 @@
 import SwiftUI
 
+public enum UnorderedBulletStyle: String {
+    case filledCircle = "●"
+    case outlineCircle = "○"
+    case square = "◼︎"
+}
+
 public protocol UnorderedBulletMarkdownStyle {
     associatedtype Body: View
     typealias Configuration = UnorderedBulletMarkdownConfiguration
@@ -26,39 +32,33 @@ public struct UnorderedBulletMarkdownConfiguration {
         }
     }
 
-    public var label: some View {
-        Label(bulletStyle: .dash)
+    public let level: Int
+    private var bulletStyle: UnorderedBulletStyle {
+        switch level {
+        case 0: return .filledCircle
+        case 1: return .outlineCircle
+        default: return .square
+        }
     }
-}
 
-public enum UnorderedBulletStyle: String {
-    case dash = "–"
-    case filledCircle = "●"
-    case outlineCircle = "○"
-    case square = "◼︎"
+    public var label: some View {
+        Label(bulletStyle: bulletStyle)
+    }
 }
 
 public struct DefaultUnorderedBulletMarkdownStyle: UnorderedBulletMarkdownStyle {
-    let bulletStyle: UnorderedBulletStyle
-
-    public init(bulletStyle: UnorderedBulletStyle) {
-        self.bulletStyle = bulletStyle
-    }
-
+    public init() { }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
 }
 
 public extension UnorderedBulletMarkdownStyle where Self == DefaultUnorderedBulletMarkdownStyle {
-    static var dash: Self { .init(bulletStyle: .dash) }
-    static var square: Self { .init(bulletStyle: .square) }
-    static var circle: Self { .init(bulletStyle: .filledCircle) }
-    static func circle(filled: Bool) -> Self { .init(bulletStyle: filled ? .filledCircle : .outlineCircle) }
+    static var automatic: Self { .init() }
 }
 
 private struct UnorderedBulletMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue: AnyUnorderedBulletMarkdownStyle = .init(.dash)
+    static let defaultValue: AnyUnorderedBulletMarkdownStyle = .init(.automatic)
 }
 
 public extension EnvironmentValues {
