@@ -38,18 +38,18 @@ public struct ListStyleMarkdownConfiguration {
                     case let .checklist(config):
                         checklist.makeBody(configuration: config)
                     case let .list(nested):
-                        list.makeBody(configuration: .init(markdownList: nested, level: level + 1))
+                        list.makeBody(configuration: .init(list: nested, level: level + 1))
                     }
                 }
             }
         }
     }
 
-    let markdownList: MarkdownList
+    public let list: MarkdownList
     public let level: Int
 
     public var label: some View {
-        Label(markdownList: markdownList, level: level)
+        Label(markdownList: list, level: level)
     }
 }
 

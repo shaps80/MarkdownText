@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum MarkdownListElement {
+public enum MarkdownListElement {
     case list(MarkdownList)
     case ordered(OrderedListItemMarkdownConfiguration)
     case unordered(UnorderedListItemMarkdownConfiguration)

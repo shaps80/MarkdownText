@@ -27,23 +27,14 @@ public struct ImageMarkdownConfiguration {
         var body: some View {
             if let source = source {
                 if let url = URL(string: source), url.scheme != nil {
-                    if #available(iOS 15.0, *) {
-                        AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
-                            switch phase {
-                            case let .success(image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                            default:
-                                EmptyView()
-                            }
-                        }
-                        .accessibilityLabel(Text(title ?? ""))
-                    } else {
-                        if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
-                            Image(uiImage: image)
+                    Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
+                        switch phase {
+                        case let .success(image):
+                            image
                                 .resizable()
                                 .scaledToFit()
+                        default:
+                            EmptyView()
                         }
                     }
                 } else {

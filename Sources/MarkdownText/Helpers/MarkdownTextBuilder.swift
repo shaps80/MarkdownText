@@ -1,14 +1,14 @@
 import SwiftUI
 import Markdown
 
-struct MarkdownList {
-    enum ListType {
+public struct MarkdownList {
+    public enum ListType {
         case unordered
         case ordered
     }
 
-    let type: ListType
-    var elements: [MarkdownListElement] = []
+    public let type: ListType
+    public var elements: [MarkdownListElement] = []
 
     mutating func append(ordered item: OrderedListItemMarkdownConfiguration) {
         elements.append(.ordered(item))
@@ -88,7 +88,7 @@ struct MarkdownTextBuilder: MarkupWalker {
         if let list = lists.last {
             if lists.count == 1 {
                 // if we're at the root element, add the the tree to the block elements
-                blockElements.append(.list(.init(markdownList: list, level: lists.count - 1)))
+                blockElements.append(.list(.init(list: list, level: lists.count - 1)))
             } else {
                 // otherwise, append nested lists to the last list
                 let index = lists.index(before: lists.index(before: lists.endIndex))
@@ -106,7 +106,7 @@ struct MarkdownTextBuilder: MarkupWalker {
         if let list = lists.last {
             if lists.count == 1 {
                 // if we're at the root element, add the the tree to the block elements
-                blockElements.append(.list(.init(markdownList: list, level: lists.count - 1)))
+                blockElements.append(.list(.init(list: list, level: lists.count - 1)))
             } else {
                 // otherwise, append nested lists to the last list
                 let index = lists.index(before: lists.index(before: lists.endIndex))
