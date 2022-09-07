@@ -1,8 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Shaps Benkau on 07/09/2022.
-//
+import SwiftUI
 
-import Foundation
+public struct SFSymbolImageMarkdownStyle: ImageMarkdownStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        if let source = configuration.source {
+            Image(systemName: source)
+        }
+    }
+}
+
+public extension ImageMarkdownStyle where Self == SFSymbolImageMarkdownStyle {
+    static var symbol: Self { .init() }
+}

@@ -38,8 +38,6 @@ public struct ImageMarkdownConfiguration {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                } else {
-                    Image(systemName: source)
                 }
             }
         }
@@ -48,16 +46,6 @@ public struct ImageMarkdownConfiguration {
     public var label: some View {
         Label(source: source, title: title)
     }
-}
-
-public struct LocalImageMarkdownStyle: ImageMarkdownStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-    }
-}
-
-public extension ImageMarkdownStyle where Self == LocalImageMarkdownStyle {
-    static var automatic: Self { .init() }
 }
 
 private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
