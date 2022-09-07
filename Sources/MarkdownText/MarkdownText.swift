@@ -1,6 +1,48 @@
 import SwiftUI
 import Markdown
 
+/// A view that renders Markdown text, but only creates elements as they are needed.
+///
+/// The stack is "lazy," in that the stack view doesn't create items until
+/// it needs to render them onscreen.
+@available(iOS 14, *)
+public struct LazyMarkdownText: View, MarkupWalker {
+    private let content: MarkdownContent
+    public var body: some View { content }
+
+    /// Creates a new Markdown view
+    /// - Parameters:
+    ///   - markdown: The markdown text to render
+    ///   - source: An explicit source URL from which the input string came for marking source locations. This need not be a file URL.
+    ///   - paragraphSpacing: The spacing to apply between all block elements
+    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
+        let elements = MarkdownTextBuilder(
+            document: Document(parsing: markdown, source: source)
+        ).blockElements
+
+        content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: true)
+    }
+}
+
+/// A view that rendered Markdown text.
+public struct MarkdownText: View, MarkupWalker {
+    private let content: MarkdownContent
+    public var body: some View { content }
+
+    /// Creates a new Markdown view
+    /// - Parameters:
+    ///   - markdown: The markdown text to render
+    ///   - source: An explicit source URL from which the input string came for marking source locations. This need not be a file URL.
+    ///   - paragraphSpacing: The spacing to apply between all block elements
+    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
+        let elements = MarkdownTextBuilder(
+            document: Document(parsing: markdown, source: source)
+        ).blockElements
+
+        content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: false)
+    }
+}
+
 private struct MarkdownContent: View {
     @Environment(\.multilineTextAlignment) private var alignment
 
@@ -24,7 +66,7 @@ private struct MarkdownContent: View {
     private var content: some View {
         ForEach(elements.indices, id: \.self) { index in
             switch elements[index] {
-            case let .header(config):
+            case let .heading(config):
                 if headingVisibility != .hidden {
                     headerStyle.makeBody(configuration: config)
                 }
@@ -84,38 +126,5 @@ private struct MarkdownContent: View {
         } else {
             VStack(alignment: stackAlignment, spacing: paragraphSpacing) { content }
         }
-    }
-}
-
-@available(iOS 14, *)
-public struct LazyMarkdownText: View, MarkupWalker {
-    private let content: MarkdownContent
-
-    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
-        let elements = MarkdownTextBuilder(
-            document: Document(parsing: markdown, source: source)
-        ).blockElements
-
-        content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: true)
-    }
-
-    public var body: some View {
-        content
-    }
-}
-
-public struct MarkdownText: View, MarkupWalker {
-    private let content: MarkdownContent
-
-    public init(_ markdown: String, source: URL? = nil, paragraphSpacing: CGFloat? = 20) {
-        let elements = MarkdownTextBuilder(
-            document: Document(parsing: markdown, source: source)
-        ).blockElements
-
-        content = .init(elements: elements, paragraphSpacing: paragraphSpacing, isLazy: false)
-    }
-
-    public var body: some View {
-        content
     }
 }

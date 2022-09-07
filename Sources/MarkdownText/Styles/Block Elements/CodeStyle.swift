@@ -1,8 +1,11 @@
 import SwiftUI
 
+/// A type that applies a custom appearance to code block markdown elements
 public protocol CodeMarkdownStyle {
     associatedtype Body: View
+    /// The properties of an code block markdown element
     typealias Configuration = CodeMarkdownConfiguration
+    /// Creates a view that represents the body of a label
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
@@ -16,8 +19,11 @@ public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
     }
 }
 
+/// The properties of a code block markdown element
 public struct CodeMarkdownConfiguration {
+    /// The raw code for this element
     public let code: String
+    /// The code language for this element
     public let language: String?
 
     struct Label: View {
@@ -40,6 +46,7 @@ public struct CodeMarkdownConfiguration {
         }
     }
 
+    /// Returns a default code block markdown representation
     public var label: some View {
         Label(code: code, language: language)
             .font(.callout)
@@ -48,10 +55,15 @@ public struct CodeMarkdownConfiguration {
     }
 }
 
+/// A code block style that applies a monospaced representation to its content and wraps it in a horizontal `ScrollView`
 public struct DefaultCodeMarkdownStyle: CodeMarkdownStyle {
     var axes: Axis.Set
     var showsIndicators: Bool
 
+    /// Creates a new instance of this style
+    /// - Parameters:
+    ///   - axes: The scrollable axes
+    ///   - showsIndicators: If `true`, scroll indicators will be visible when required
     public init(_ axes: Axis.Set = .horizontal, showsIndicators: Bool = false) {
         self.axes = axes
         self.showsIndicators = showsIndicators
@@ -65,15 +77,13 @@ public struct DefaultCodeMarkdownStyle: CodeMarkdownStyle {
 }
 
 public extension CodeMarkdownStyle where Self == DefaultCodeMarkdownStyle {
-    /// The default code style in the current context.
-    static var `default`: Self {
-        .init()
-    }
+    /// A code block style that applies a monospaced representation to its content and wraps it in a horizontal `ScrollView`
+    static var `default`: Self { .init() }
 
-    /// The default code style in the current context.
+    /// A code block style that applies a monospaced representation to its content and wraps it in a horizontal `ScrollView`
     /// - Parameters:
-    ///   - axes: The scrollable axes of the scroll view. Defaults to `Axis/horizontal`
-    ///   - showsIndicators: A value that indicates whether the scroll view displays the scrollable component of the content offset. Defaults to `false`
+    ///   - axes: The scrollable axes
+    ///   - showsIndicators: If `true`, scroll indicators will be visible when required
     static func `default`(_ axes: Axis.Set, showsIndicators: Bool = false) -> Self {
         .init(axes, showsIndicators: showsIndicators)
     }
@@ -84,6 +94,7 @@ private struct CodeMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 public extension EnvironmentValues {
+    /// The current code block markdown style
     var markdownCodeStyle: AnyCodeMarkdownStyle {
         get { self[CodeMarkdownEnvironmentKey.self] }
         set { self[CodeMarkdownEnvironmentKey.self] = newValue }
@@ -91,6 +102,7 @@ public extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the style for code block markdown elements
     func markdownCodeStyle<S>(_ style: S) -> some View where S: CodeMarkdownStyle {
         environment(\.markdownCodeStyle, AnyCodeMarkdownStyle(style))
     }

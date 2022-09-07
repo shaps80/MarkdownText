@@ -1,32 +1,6 @@
 import SwiftUI
 import Markdown
 
-public struct MarkdownList {
-    public enum ListType {
-        case unordered
-        case ordered
-    }
-
-    public let type: ListType
-    public var elements: [MarkdownListElement] = []
-
-    mutating func append(ordered item: OrderedListItemMarkdownConfiguration) {
-        elements.append(.ordered(item))
-    }
-
-    mutating func append(unordered item: UnorderedListItemMarkdownConfiguration) {
-        elements.append(.unordered(item))
-    }
-
-    mutating func append(checklist item: CheckListItemMarkdownConfiguration) {
-        elements.append(.checklist(item))
-    }
-
-    mutating func append(nested list: Self) {
-        elements.append(.list(list))
-    }
-}
-
 struct MarkdownTextBuilder: MarkupWalker {
     var isNested: Bool = false
     var nestedBlockElements: [MarkdownBlockElement] = []
@@ -40,7 +14,7 @@ struct MarkdownTextBuilder: MarkupWalker {
 
     mutating func visitHeading(_ markdown: Heading) {
         descendInto(markdown)
-        blockElements.append(.header(.init(level: markdown.level, inline: .init(components: inlineElements))))
+        blockElements.append(.heading(.init(level: markdown.level, content: .init(elements: inlineElements))))
         inlineElements = []
     }
 
@@ -78,7 +52,7 @@ struct MarkdownTextBuilder: MarkupWalker {
             }
         }
 
-        inlineElements.append(.init(text: .init(text), attributes: attributes))
+        inlineElements.append(.init(content: .init(text), attributes: attributes))
     }
 
     mutating func visitOrderedList(_ markdown: OrderedList) {
@@ -132,28 +106,28 @@ struct MarkdownTextBuilder: MarkupWalker {
                 lists[index].append(ordered: .init(
                     level: lists.count - 1,
                     bullet: .init(order: listItem.indexInParent + 1),
-                    paragraph: .init(inline: .init(components: inlineElements)))
+                    paragraph: .init(inline: .init(elements: inlineElements)))
                 )
             default:
                 if let checkbox = listItem.checkbox {
                     lists[index].append(checklist: .init(
                         level: lists.count - 1,
                         bullet: .init(isChecked: checkbox == .checked),
-                        paragraph: .init(inline: .init(components: inlineElements)))
+                        paragraph: .init(inline: .init(elements: inlineElements)))
                     )
                 } else {
                     lists[index].append(unordered: .init(
                         level: lists.count - 1,
                         bullet: .init(level: lists.count - 1),
-                        paragraph: .init(inline: .init(components: inlineElements)))
+                        paragraph: .init(inline: .init(elements: inlineElements)))
                     )
                 }
             }
         } else {
             if isNested {
-                nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
+                nestedBlockElements.append(.paragraph(.init(inline: .init(elements: inlineElements))))
             } else {
-                blockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
+                blockElements.append(.paragraph(.init(inline: .init(elements: inlineElements))))
             }
         }
 
@@ -178,7 +152,7 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitInlineCode(_ markdown: InlineCode) {
-        inlineElements.append(.init(text: .init(markdown.code), attributes: .code))
+        inlineElements.append(.init(content: .init(markdown.code), attributes: .code))
     }
 
     mutating func visitStrikethrough(_ markdown: Strikethrough) {

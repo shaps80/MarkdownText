@@ -9,16 +9,16 @@ struct InlineMarkdownConfiguration {
         @Environment(\.markdownInlineCodeStyle) private var code
         @Environment(\.markdownInlineLinkStyle) private var link
 
-        let components: [MarkdownInlineElement]
+        let elements: [MarkdownInlineElement]
 
         var body: some View {
-            components.reduce(into: Text("")) { result, component in
+            elements.reduce(into: Text("")) { result, component in
                 if component.attributes.contains(.code) {
                     return result = result + code.makeBody(
-                        configuration: .init(code: component.text, font: font)
+                        configuration: .init(code: component.content, font: font)
                     )
                 } else {
-                    return result = result + Text(component.text).apply(
+                    return result = result + Text(component.content).apply(
                         strong: strong,
                         emphasis: emphasis,
                         strikethrough: strikethrough,
@@ -30,10 +30,10 @@ struct InlineMarkdownConfiguration {
         }
     }
 
-    let components: [MarkdownInlineElement]
+    public let elements: [MarkdownInlineElement]
 
     public var label: some View {
-        Label(components: components)
+        Label(elements: elements)
             .fixedSize(horizontal: false, vertical: true)
     }
 }
