@@ -18,50 +18,58 @@ public struct AnyImageMarkdownStyle: ImageMarkdownStyle {
 
 public struct ImageMarkdownConfiguration {
     public let source: String?
-    public let title: String
-}
+    public let title: String?
 
-public struct LocalImageMarkdownStyle: ImageMarkdownStyle {
-    enum Source {
-        case system
-        case asset
-    }
+    private struct Label: View {
+        public let source: String?
+        public let title: String?
 
-    var source: Source
-    var color: Color?
-
-    public func makeBody(configuration: Configuration) -> some View {
-        if let source = configuration.source {
-            if let url = URL(string: source) {
-                if #available(iOS 15.0, *) {
-                    AsyncImage(url: url)
+        var body: some View {
+            if let source = source {
+                if let url = URL(string: source), url.scheme != nil {
+                    if #available(iOS 15.0, *) {
+                        AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
+                            switch phase {
+                            case let .success(image):
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            default:
+                                EmptyView()
+                            }
+                        }
+                        .accessibilityLabel(Text(title ?? ""))
+                    } else {
+                        if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
                 } else {
-                    Text("[\(configuration.title)]")
-                }
-            } else {
-                switch self.source {
-                case .system:
                     Image(systemName: source)
-                        .foregroundColor(color)
-                case .asset:
-                    Image(source)
-                        .foregroundColor(color)
                 }
             }
         }
     }
+
+    public var label: some View {
+        Label(source: source, title: title)
+    }
+}
+
+public struct LocalImageMarkdownStyle: ImageMarkdownStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
 }
 
 public extension ImageMarkdownStyle where Self == LocalImageMarkdownStyle {
-    static var system: Self { LocalImageMarkdownStyle(source: .system) }
-    static var assets: Self { LocalImageMarkdownStyle(source: .asset) }
-
-    static func system(color: Color? = nil) -> Self { LocalImageMarkdownStyle(source: .system, color: color) }
-    static func assets(color: Color? = nil) -> Self { LocalImageMarkdownStyle(source: .asset, color: color) }
+    static var automatic: Self { .init() }
 }
 
 private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyImageMarkdownStyle(.system)
+    static let defaultValue = AnyImageMarkdownStyle(.automatic)
 }
 
 public extension EnvironmentValues {

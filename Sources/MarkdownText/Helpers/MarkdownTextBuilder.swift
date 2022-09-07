@@ -88,13 +88,11 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitImage(_ markdown: Markdown.Image) {
-//        print("Image")
-        descendInto(markdown)
+        elements.append(.image(.init(source: markdown.source, title: markdown.title)))
     }
 
     mutating func visitLink(_ markdown: Markdown.Link) {
-//        print("Link")
-        descendInto(markdown)
+        #warning("TBD")
     }
 
     mutating func visitStrong(_ markdown: Strong) {
@@ -128,21 +126,18 @@ struct MarkdownTextBuilder: MarkupWalker {
     }
 
     mutating func visitOrderedList(_ markdown: OrderedList) {
-        print("Ordered list")
         listStack.append(.ordered)
         descendInto(markdown)
         listStack.removeLast()
     }
 
     mutating func visitUnorderedList(_ markdown: UnorderedList) {
-        print("Unordered list")
         listStack.append(.unordered)
         descendInto(markdown)
         listStack.removeLast()
     }
 
     mutating func visitListItem(_ markdown: Markdown.ListItem) {
-        print("List item")
         descendInto(markdown)
     }
 
@@ -159,21 +154,6 @@ struct MarkdownTextBuilder: MarkupWalker {
         components = []
         nestedElements = []
         isNested = false
-    }
-
-    mutating func visitCustomBlock(_ markdown: CustomBlock) {
-//        print("Custom block")
-        descendInto(markdown)
-    }
-
-    mutating func visitCustomInline(_ markdown: CustomInline) {
-//        print("Custom inline")
-        descendInto(markdown)
-    }
-
-    mutating func visitBlockDirective(_ markdown: BlockDirective) {
-//        print("Block directive")
-        descendInto(markdown)
     }
 
     mutating func visitInlineHTML(_ markdown: InlineHTML) {

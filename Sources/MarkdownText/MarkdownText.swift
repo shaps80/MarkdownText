@@ -41,7 +41,6 @@ private struct MarkdownContent: View {
         }
     }
     
-
     let elements: [MarkdownElement]
     let paragraphSpacing: CGFloat?
     let isLazy: Bool

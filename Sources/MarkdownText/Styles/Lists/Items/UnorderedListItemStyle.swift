@@ -64,14 +64,14 @@ public extension UnorderedListItemMarkdownStyle where Self == DefaultUnorderedLi
     static var `default`: Self { .init() }
 }
 
-private struct UnorderedListMarkdownEnvironmentKey: EnvironmentKey {
+private struct UnorderedListItemMarkdownEnvironmentKey: EnvironmentKey {
     static let defaultValue = AnyUnorderedListItemMarkdownStyle(.default)
 }
 
 public extension EnvironmentValues {
     var markdownUnorderedListItemStyle: AnyUnorderedListItemMarkdownStyle {
-        get { self[UnorderedListMarkdownEnvironmentKey.self] }
-        set { self[UnorderedListMarkdownEnvironmentKey.self] = newValue }
+        get { self[UnorderedListItemMarkdownEnvironmentKey.self] }
+        set { self[UnorderedListItemMarkdownEnvironmentKey.self] = newValue }
     }
 }
 
