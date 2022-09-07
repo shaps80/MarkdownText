@@ -13,6 +13,7 @@ struct MarkdownTextBuilder: MarkupWalker {
     var blockElements: [MarkdownElement] = []
     var listStack: [ListItemType] = []
     var lists: [MarkdownListElement] = []
+    var currentListItem: MarkdownListElement?
 
     init(document: Document) {
         visit(document)
@@ -61,32 +62,48 @@ struct MarkdownTextBuilder: MarkupWalker {
         inlineElements.append(.init(text: .init(text), attributes: attributes))
     }
 
+    mutating func visitOrderedList(_ markdown: OrderedList) {
+        listStack.append(.ordered)
+        descendInto(markdown)
+        listStack.removeLast()
+    }
+
+    mutating func visitUnorderedList(_ markdown: UnorderedList) {
+        listStack.append(.unordered)
+        descendInto(markdown)
+        listStack.removeLast()
+    }
+
+    mutating func visitListItem(_ markdown: Markdown.ListItem) {
+        descendInto(markdown)
+    }
+
     mutating func visitParagraph(_ markdown: Paragraph) {
         descendInto(markdown)
 
         if let listItem = markdown.parent as? ListItem {
-//            switch listStack.last {
-//            case .ordered:
-//                blockElements.append(.orderedListItem(.init(
-//                    level: listStack.count - 1,
-//                    bullet: .init(order: listItem.indexInParent + 1),
-//                    paragraph: .init(inline: .init(components: inlineElements))))
-//                )
-//            default:
-//                if let checkbox = listItem.checkbox {
-//                    blockElements.append(.checklistItem(.init(
-//                        level: listStack.count - 1,
-//                        bullet: .init(isChecked: checkbox == .checked),
-//                        paragraph: .init(inline: .init(components: inlineElements))))
-//                    )
-//                } else {
-//                    blockElements.append(.unorderedListItem(.init(
-//                        level: listStack.count - 1,
-//                        bullet: .init(),
-//                        paragraph: .init(inline: .init(components: inlineElements))))
-//                    )
-//                }
-//            }
+            switch listStack.last {
+            case .ordered:
+                currentListItem = .ordered(.init(
+                    level: listStack.count - 1,
+                    bullet: .init(order: listItem.indexInParent + 1),
+                    paragraph: .init(inline: .init(components: inlineElements)))
+                )
+            default:
+                if let checkbox = listItem.checkbox {
+                    currentListItem = .checklist(.init(
+                        level: listStack.count - 1,
+                        bullet: .init(isChecked: checkbox == .checked),
+                        paragraph: .init(inline: .init(components: inlineElements)))
+                    )
+                } else {
+                    currentListItem = .unordered(.init(
+                        level: listStack.count - 1,
+                        bullet: .init(level: listStack.count - 1),
+                        paragraph: .init(inline: .init(components: inlineElements)))
+                    )
+                }
+            }
         } else {
             if isNested {
                 nestedBlockElements.append(.paragraph(.init(inline: .init(components: inlineElements))))
@@ -133,22 +150,6 @@ struct MarkdownTextBuilder: MarkupWalker {
 
     mutating func visitThematicBreak(_ markdown: ThematicBreak) {
         blockElements.append(.thematicBreak(.init()))
-        descendInto(markdown)
-    }
-
-    mutating func visitOrderedList(_ markdown: OrderedList) {
-        listStack.append(.ordered)
-        descendInto(markdown)
-        listStack.removeLast()
-    }
-
-    mutating func visitUnorderedList(_ markdown: UnorderedList) {
-        listStack.append(.unordered)
-        descendInto(markdown)
-        listStack.removeLast()
-    }
-
-    mutating func visitListItem(_ markdown: Markdown.ListItem) {
         descendInto(markdown)
     }
 
