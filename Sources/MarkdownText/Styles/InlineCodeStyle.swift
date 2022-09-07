@@ -7,7 +7,7 @@ public protocol InlineCodeMarkdownStyle {
 
 public struct InlineCodeMarkdownConfiguration {
     public let code: String
-    public let font: Font?
+    internal let font: Font?
 
     public var label: Text {
         if #available(iOS 15, *) {
