@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftUIBackports
 
-struct ListLabelStyle: BackportLabelStyle {
+struct ListLabelStyle: LabelStyle {
     struct Content: View {
         let configuration: Configuration
 
@@ -20,6 +20,6 @@ struct ListLabelStyle: BackportLabelStyle {
     }
 }
 
-extension BackportLabelStyle where Self == ListLabelStyle {
+extension LabelStyle where Self == ListLabelStyle {
     static var list: Self { .init() }
 }

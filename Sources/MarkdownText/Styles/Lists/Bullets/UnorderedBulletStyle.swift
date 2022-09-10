@@ -50,7 +50,7 @@ public struct AnyUnorderedListBulletMarkdownStyle: UnorderedListBulletMarkdownSt
 /// The properties of a unordered bullet markdown element
 public struct UnorderedListBulletMarkdownConfiguration {
     struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         let bulletStyle: UnorderedListBulletStyle
         var body: some View {
             Text("\(bulletStyle.rawValue)")

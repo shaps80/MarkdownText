@@ -23,8 +23,8 @@ public struct AnyUnorderedListItemMarkdownStyle: UnorderedListItemMarkdownStyle 
 
 /// The properties of an unordered item markdown element
 public struct UnorderedListItemMarkdownConfiguration {
-    private struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+    private struct Item: View {
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
         @Environment(\.markdownUnorderedListBulletStyle) private var bulletStyle
         @Environment(\.markdownUnorderedListItemBulletVisibility) private var bulletVisibility
@@ -41,7 +41,7 @@ public struct UnorderedListItemMarkdownConfiguration {
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 Text(space)
 
-                Backport.Label {
+                Label {
                     paragraphStyle.makeBody(configuration: paragraph)
                 } icon: {
                     if bulletVisibility != .hidden {
@@ -49,7 +49,7 @@ public struct UnorderedListItemMarkdownConfiguration {
                             .frame(minWidth: reservedWidth)
                     }
                 }
-                .backport.labelStyle(.list)
+                .labelStyle(.list)
             }
         }
     }
@@ -62,7 +62,7 @@ public struct UnorderedListItemMarkdownConfiguration {
     public let content: ParagraphMarkdownConfiguration
     /// Returns a default unordered item markdown representation
     public var label: some View {
-        Label(level: level, bullet: bullet, paragraph: content)
+        Item(level: level, bullet: bullet, paragraph: content)
     }
 }
 

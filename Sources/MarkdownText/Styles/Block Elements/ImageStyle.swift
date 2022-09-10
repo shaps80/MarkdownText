@@ -55,7 +55,7 @@ public struct ImageMarkdownConfiguration {
                                 .resizable()
                                 .scaledToFit()
                         case .empty:
-                            Backport.ProgressView()
+                            ProgressView()
                         default:
                             EmptyView()
                         }

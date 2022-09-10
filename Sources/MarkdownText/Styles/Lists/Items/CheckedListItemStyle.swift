@@ -23,8 +23,8 @@ public struct AnyCheckListItemMarkdownStyle: CheckListItemMarkdownStyle {
 
 /// The properties of a checklist item markdown element
 public struct CheckListItemMarkdownConfiguration {
-    private struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+    private struct Item: View {
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
         @Environment(\.markdownCheckListBulletStyle) private var bulletStyle
         @Environment(\.markdownCheckListItemBulletVisibility) private var bulletVisibility
@@ -41,7 +41,7 @@ public struct CheckListItemMarkdownConfiguration {
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 Text(space)
 
-                Backport.Label {
+                Label {
                     paragraphStyle.makeBody(configuration: paragraph)
                 } icon: {
                     if bulletVisibility != .hidden {
@@ -49,7 +49,7 @@ public struct CheckListItemMarkdownConfiguration {
                             .frame(minWidth: reservedWidth)
                     }
                 }
-                .backport.labelStyle(.list)
+                .labelStyle(.list)
             }
         }
     }
@@ -62,7 +62,7 @@ public struct CheckListItemMarkdownConfiguration {
     public let content: ParagraphMarkdownConfiguration
     /// Returns a default checklist item markdown representation
     public var label: some View {
-        Label(level: level, bullet: bullet, paragraph: content)
+        Item(level: level, bullet: bullet, paragraph: content)
     }
 }
 

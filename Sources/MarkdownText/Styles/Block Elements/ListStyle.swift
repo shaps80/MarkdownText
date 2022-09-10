@@ -33,7 +33,7 @@ public struct ListStyleMarkdownConfiguration {
         @Environment(\.markdownUnorderedListItemVisibility) private var unorderedListItemVisibility
         @Environment(\.markdownOrderedListItemVisibility) private var orderedListItemVisibility
 
-        @Backport.ScaledMetric private var spacing: CGFloat = 8
+        @ScaledMetric private var spacing: CGFloat = 8
 
         let markdownList: MarkdownList
         let level: Int

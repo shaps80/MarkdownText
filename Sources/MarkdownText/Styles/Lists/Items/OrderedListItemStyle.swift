@@ -23,8 +23,8 @@ public struct AnyOrderedListItemMarkdownStyle: OrderedListItemMarkdownStyle {
 
 /// The properties of a ordered item markdown element
 public struct OrderedListItemMarkdownConfiguration {
-    private struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+    private struct Item: View {
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         @Environment(\.markdownParagraphStyle) private var paragraphStyle
         @Environment(\.markdownOrderedListBulletStyle) private var bulletStyle
         @Environment(\.markdownOrderedListItemBulletVisibility) private var bulletVisibility
@@ -41,7 +41,7 @@ public struct OrderedListItemMarkdownConfiguration {
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 Text(space)
 
-                Backport.Label {
+                Label {
                     paragraphStyle.makeBody(configuration: paragraph)
                 } icon: {
                     if bulletVisibility != .hidden {
@@ -49,7 +49,7 @@ public struct OrderedListItemMarkdownConfiguration {
                             .frame(minWidth: reservedWidth)
                     }
                 }
-                .backport.labelStyle(.list)
+                .labelStyle(.list)
             }
         }
     }
@@ -62,7 +62,7 @@ public struct OrderedListItemMarkdownConfiguration {
     public let content: ParagraphMarkdownConfiguration
     /// Returns a default ordered item markdown representation
     public var label: some View {
-        Label(level: level, bullet: bullet, paragraph: content)
+        Item(level: level, bullet: bullet, paragraph: content)
     }
 }
 

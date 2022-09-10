@@ -24,7 +24,7 @@ public struct AnyOrderedListBulletMarkdownStyle: OrderedListBulletMarkdownStyle 
 /// The properties of a ordered bullet markdown element
 public struct OrderedListBulletMarkdownConfiguration {
     struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         let order: Int
 
         var body: some View {

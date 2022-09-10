@@ -24,7 +24,7 @@ public struct AnyCheckListBulletMarkdownStyle: CheckListBulletMarkdownStyle {
 /// The properties of a checklist bullet markdown element
 public struct CheckListBulletMarkdownConfiguration {
     private struct Label: View {
-        @Backport.ScaledMetric private var reservedWidth: CGFloat = 25
+        @ScaledMetric private var reservedWidth: CGFloat = 25
         public let isChecked: Bool
 
         var body: some View {
