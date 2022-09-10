@@ -14,6 +14,7 @@ public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
     init<S: CodeMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
+
     public func makeBody(configuration: Configuration) -> some View {
         label(configuration)
     }
@@ -37,7 +38,7 @@ public struct CodeMarkdownConfiguration {
                 Text(code.trimmingCharacters(in: .newlines))
                     .font(
                         font?.monospaced()
-                        ?? .system(.body, design: .monospaced)
+                            ?? .system(.body, design: .monospaced)
                     )
             } else {
                 Text(code.trimmingCharacters(in: .newlines))
@@ -68,7 +69,7 @@ public struct DefaultCodeMarkdownStyle: CodeMarkdownStyle {
         self.axes = axes
         self.showsIndicators = showsIndicators
     }
-    
+
     public func makeBody(configuration: Configuration) -> some View {
         ScrollView(axes, showsIndicators: showsIndicators) {
             configuration.label

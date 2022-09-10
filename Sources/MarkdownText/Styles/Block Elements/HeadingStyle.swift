@@ -14,6 +14,7 @@ public struct AnyHeadingMarkdownStyle: HeadingMarkdownStyle {
     init<S: HeadingMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
+
     public func makeBody(configuration: Configuration) -> some View {
         label(configuration)
     }
@@ -23,7 +24,7 @@ public struct AnyHeadingMarkdownStyle: HeadingMarkdownStyle {
 public struct HeadingMarkdownConfiguration {
     /// The header level (e.g. `H2` would have a level of `2`)
     public let level: Int
-    /// The content for this heading
+    /// The content for this element
     ///
     /// You can use this to maintain the existing heading style:
     ///

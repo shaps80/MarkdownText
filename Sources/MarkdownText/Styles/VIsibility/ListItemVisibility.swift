@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for all list item markdown elements
     func markdownList(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownListVisibility, visibility)
     }

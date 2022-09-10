@@ -1,9 +1,12 @@
 import SwiftUI
 import SwiftUIBackports
 
+/// A type that applies a custom appearance to list markdown elements
 public protocol ListMarkdownStyle {
     associatedtype Body: View
+    /// The properties of a list markdown element
     typealias Configuration = ListStyleMarkdownConfiguration
+    /// Creates a view that represents the body of a label
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
@@ -12,11 +15,13 @@ public struct AnyListMarkdownStyle: ListMarkdownStyle {
     init<S: ListMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
+
     public func makeBody(configuration: Configuration) -> some View {
         label(configuration)
     }
 }
 
+/// The properties of a list markdown element
 public struct ListStyleMarkdownConfiguration {
     private struct Label: View {
         @Environment(\.markdownListStyle) private var list
@@ -57,14 +62,18 @@ public struct ListStyleMarkdownConfiguration {
         }
     }
 
+    /// A model representing the elements of this list, including any nested lists
     public let list: MarkdownList
+    /// The indentation level of the list
     public let level: Int
 
+    /// Returns a default list markdown representation
     public var label: some View {
         Label(markdownList: list, level: level)
     }
 }
 
+/// The default list style
 public struct DefaultListMarkdownStyle: ListMarkdownStyle {
     public init() { }
     public func makeBody(configuration: Configuration) -> some View {
@@ -73,6 +82,7 @@ public struct DefaultListMarkdownStyle: ListMarkdownStyle {
 }
 
 public extension ListMarkdownStyle where Self == DefaultListMarkdownStyle {
+    /// The default list style
     static var `default`: Self { .init() }
 }
 
@@ -81,6 +91,7 @@ private struct ListMarkdownEnvironmentKey: EnvironmentKey {
 }
 
 public extension EnvironmentValues {
+    /// The current list markdown style
     var markdownListStyle: AnyListMarkdownStyle {
         get { self[ListMarkdownEnvironmentKey.self] }
         set { self[ListMarkdownEnvironmentKey.self] = newValue }
@@ -88,6 +99,7 @@ public extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the style for list markdown elements
     func markdownListStyle<S>(_ style: S) -> some View where S: ListMarkdownStyle {
         environment(\.markdownListStyle, .init(style))
     }

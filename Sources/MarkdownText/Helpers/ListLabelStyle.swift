@@ -18,7 +18,6 @@ struct ListLabelStyle: BackportLabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         Content(configuration: configuration)
     }
-
 }
 
 extension BackportLabelStyle where Self == ListLabelStyle {

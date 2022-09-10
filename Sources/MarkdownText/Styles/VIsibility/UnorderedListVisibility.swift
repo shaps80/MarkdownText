@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for unordered item markdown elements
     func markdownUnorderedListItem(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownUnorderedListItemVisibility, visibility)
     }
@@ -30,6 +31,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for unordered bullet markdown elements
     func markdownUnorderedListItemBullet(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownUnorderedListItemBulletVisibility, visibility)
     }

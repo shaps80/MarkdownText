@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for image markdown elements
     func markdownImage(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownImageVisibility, visibility)
     }

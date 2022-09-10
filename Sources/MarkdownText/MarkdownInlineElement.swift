@@ -65,4 +65,3 @@ internal extension Text {
         return text
     }
 }
-

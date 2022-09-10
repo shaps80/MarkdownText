@@ -15,6 +15,7 @@ public struct AnyImageMarkdownStyle: ImageMarkdownStyle {
     init<S: ImageMarkdownStyle>(_ style: S) {
         label = { AnyView(style.makeBody(configuration: $0)) }
     }
+
     public func makeBody(configuration: Configuration) -> some View {
         label(configuration)
     }
@@ -41,9 +42,10 @@ public struct ImageMarkdownConfiguration {
         var body: some View {
             if let source = source, let url = URL(string: source), url.scheme != nil {
                 if source.localizedCaseInsensitiveContains("img.shields.io")
-                    || source.localizedCaseInsensitiveContains(".svg") {
+                    || source.localizedCaseInsensitiveContains(".svg")
+                {
                     inlineStyle.makeBody(configuration: .init(elements: [
-                        .init(content: .init(title ?? source))
+                        .init(content: .init(title ?? source)),
                     ]))
                 } else {
                     Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in

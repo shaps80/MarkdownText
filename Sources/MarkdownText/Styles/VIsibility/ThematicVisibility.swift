@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for thematic break markdown elements
     func markdownThematicBreak(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownThematicBreakVisibility, visibility)
     }

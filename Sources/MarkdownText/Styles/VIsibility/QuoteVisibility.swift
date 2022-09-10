@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for quote markdown elements
     func markdownQuote(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownQuoteListVisibility, visibility)
     }

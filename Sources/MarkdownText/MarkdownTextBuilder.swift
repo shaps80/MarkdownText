@@ -48,7 +48,7 @@ struct MarkdownTextBuilder: MarkupWalker {
                  One idea here could be to collect links like footnotes, reference them in the rendered result as such (at least by default) and then add actual buttons to the bottom of the rendered output?
                  */
                 attributes.insert(.link)
-                text = link.plainText //+ (link.destination.flatMap { " [\($0)]" } ?? "")
+                text = link.plainText // + (link.destination.flatMap { " [\($0)]" } ?? "")
             }
         }
 
@@ -106,28 +106,31 @@ struct MarkdownTextBuilder: MarkupWalker {
                 lists[index].append(ordered: .init(
                     level: lists.count - 1,
                     bullet: .init(order: listItem.indexInParent + 1),
-                    paragraph: .init(inline: .init(elements: inlineElements)))
+                    content: .init(content: .init(elements: inlineElements))
+                )
                 )
             default:
                 if let checkbox = listItem.checkbox {
                     lists[index].append(checklist: .init(
                         level: lists.count - 1,
                         bullet: .init(isChecked: checkbox == .checked),
-                        paragraph: .init(inline: .init(elements: inlineElements)))
+                        content: .init(content: .init(elements: inlineElements))
+                    )
                     )
                 } else {
                     lists[index].append(unordered: .init(
                         level: lists.count - 1,
                         bullet: .init(level: lists.count - 1),
-                        paragraph: .init(inline: .init(elements: inlineElements)))
+                        content: .init(content: .init(elements: inlineElements))
+                    )
                     )
                 }
             }
         } else {
             if isNested {
-                nestedBlockElements.append(.paragraph(.init(inline: .init(elements: inlineElements))))
+                nestedBlockElements.append(.paragraph(.init(content: .init(elements: inlineElements))))
             } else {
-                blockElements.append(.paragraph(.init(inline: .init(elements: inlineElements))))
+                blockElements.append(.paragraph(.init(content: .init(elements: inlineElements))))
             }
         }
 
@@ -175,7 +178,7 @@ struct MarkdownTextBuilder: MarkupWalker {
 
         for element in nestedBlockElements {
             if case let .paragraph(config) = element {
-                blockElements.append(.quote(.init(paragraph: config)))
+                blockElements.append(.quote(.init(content: config)))
             }
         }
 
@@ -184,23 +187,23 @@ struct MarkdownTextBuilder: MarkupWalker {
         isNested = false
     }
 
-    mutating func visitTable(_ markdown: Markdown.Table) {
+    mutating func visitTable(_: Markdown.Table) {
         #warning("TBD")
     }
 
-    mutating func visitTableRow(_ markdown: Markdown.Table.Row) {
+    mutating func visitTableRow(_: Markdown.Table.Row) {
         #warning("TBD")
     }
 
-    mutating func visitTableBody(_ tableBody: Markdown.Table.Body) {
+    mutating func visitTableBody(_: Markdown.Table.Body) {
         #warning("TBD")
     }
 
-    mutating func visitTableCell(_ tableCell: Markdown.Table.Cell) {
+    mutating func visitTableCell(_: Markdown.Table.Cell) {
         #warning("TBD")
     }
 
-    mutating func visitTableHead(_ tableHead: Markdown.Table.Head) {
+    mutating func visitTableHead(_: Markdown.Table.Head) {
         #warning("TBD")
     }
 
@@ -208,9 +211,9 @@ struct MarkdownTextBuilder: MarkupWalker {
         visitText(.init(markdown.plainText))
     }
 
-    mutating func visitSymbolLink(_ markdown: SymbolLink) { }
-    mutating func visitBlockDirective(_ markdown: BlockDirective) { }
-    mutating func visitCustomInline(_ customInline: CustomInline) { }
-    mutating func visitHTMLBlock(_ markdown: HTMLBlock) { }
-    mutating func visitInlineHTML(_ markdown: InlineHTML) { }
+    mutating func visitSymbolLink(_: SymbolLink) { }
+    mutating func visitBlockDirective(_: BlockDirective) { }
+    mutating func visitCustomInline(_: CustomInline) { }
+    mutating func visitHTMLBlock(_: HTMLBlock) { }
+    mutating func visitInlineHTML(_: InlineHTML) { }
 }

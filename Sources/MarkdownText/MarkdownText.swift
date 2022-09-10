@@ -104,8 +104,8 @@ private struct MarkdownContent: View {
 
     private var stackAlignment: HorizontalAlignment {
         alignment == .leading
-        ? .leading
-        : alignment == .trailing
+            ? .leading
+            : alignment == .trailing
             ? .trailing
             : .center
     }

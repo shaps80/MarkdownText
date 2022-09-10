@@ -15,6 +15,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for heading markdown elements
     func markdownHeading(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownHeadingVisibility, visibility)
     }

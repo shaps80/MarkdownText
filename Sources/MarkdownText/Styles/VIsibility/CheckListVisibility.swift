@@ -13,6 +13,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for checklist item markdown elements
     func markdownCheckListItem(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownCheckListItemVisibility, visibility)
     }
@@ -30,6 +31,7 @@ internal extension EnvironmentValues {
 }
 
 public extension View {
+    /// Sets the visibility for checklist bullet markdown elements
     func markdownCheckListItemBullet(_ visibility: Backport<Any>.Visibility) -> some View {
         environment(\.markdownCheckListItemBulletVisibility, visibility)
     }

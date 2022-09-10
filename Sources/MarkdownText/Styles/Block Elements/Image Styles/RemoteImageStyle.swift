@@ -13,6 +13,6 @@ public extension ImageMarkdownStyle where Self == RemoteImageMarkdownStyle {
     /// Example:
     ///
     ///     ![Lorem Image](https://picsum.photos/500)
-    ///     
+    ///
     static var remote: Self { .init() }
 }
