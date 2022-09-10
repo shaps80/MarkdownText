@@ -34,6 +34,18 @@ public struct CodeMarkdownConfiguration {
         let language: String?
 
         var body: some View {
+            #if os(macOS)
+            if #available(macOS 12, *) {
+                Text(code.trimmingCharacters(in: .newlines))
+                    .font(
+                        font?.monospaced()
+                        ?? .system(.body, design: .monospaced)
+                    )
+            } else {
+                Text(code.trimmingCharacters(in: .newlines))
+                    .font(.system(.body, design: .monospaced))
+            }
+            #elseif os(iOS)
             if #available(iOS 15, *) {
                 Text(code.trimmingCharacters(in: .newlines))
                     .font(
@@ -44,6 +56,10 @@ public struct CodeMarkdownConfiguration {
                 Text(code.trimmingCharacters(in: .newlines))
                     .font(.system(.body, design: .monospaced))
             }
+            #else
+            Text(code.trimmingCharacters(in: .newlines))
+                .font(.system(.body, design: .monospaced))
+            #endif
         }
     }
 

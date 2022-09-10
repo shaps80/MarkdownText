@@ -187,29 +187,15 @@ struct MarkdownTextBuilder: MarkupWalker {
         isNested = false
     }
 
-    mutating func visitTable(_: Markdown.Table) {
-        #warning("TBD")
-    }
-
-    mutating func visitTableRow(_: Markdown.Table.Row) {
-        #warning("TBD")
-    }
-
-    mutating func visitTableBody(_: Markdown.Table.Body) {
-        #warning("TBD")
-    }
-
-    mutating func visitTableCell(_: Markdown.Table.Cell) {
-        #warning("TBD")
-    }
-
-    mutating func visitTableHead(_: Markdown.Table.Head) {
-        #warning("TBD")
-    }
-
     mutating func visitSoftBreak(_ markdown: SoftBreak) {
         visitText(.init(markdown.plainText))
     }
+
+    mutating func visitTable(_: Markdown.Table) { }
+    mutating func visitTableRow(_: Markdown.Table.Row) { }
+    mutating func visitTableBody(_: Markdown.Table.Body) { }
+    mutating func visitTableCell(_: Markdown.Table.Cell) { }
+    mutating func visitTableHead(_: Markdown.Table.Head) { }
 
     mutating func visitSymbolLink(_: SymbolLink) { }
     mutating func visitBlockDirective(_: BlockDirective) { }
