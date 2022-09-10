@@ -46,13 +46,12 @@ public struct ImageMarkdownConfiguration {
                         .init(content: .init(title ?? source))
                     ]))
                 } else {
-                    Backport.AsyncImage(url: url, transaction: .init(animation: .interactiveSpring())) { phase in
+                    Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
                         switch phase {
                         case let .success(image):
                             image
                                 .resizable()
                                 .scaledToFit()
-                                .transition(.move(edge: .top).combined(with: .scale))
                         case .empty:
                             Backport.ProgressView()
                         default:
