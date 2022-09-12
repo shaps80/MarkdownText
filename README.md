@@ -6,6 +6,10 @@
 
 A native SwiftUI view for rendering Markdown text in an iOS or macOS app.
 
+## Preview
+
+![Markdown Text Screenshot](Resources/screenshot.jpg)
+
 ## Sponsor
 
 Building useful libraries like these, takes time away from my family. I build these tools in my spare time because I feel its important to give back to the community. Please consider [Sponsoring](https://github.com/sponsors/shaps80) me as it helps keep me working on useful libraries like these 😬
@@ -13,10 +17,6 @@ Building useful libraries like these, takes time away from my family. I build th
 You can also give me a follow and a 'thanks' anytime.
 
 [![Twitter](https://img.shields.io/badge/Twitter-@shaps-4AC71B)](http://twitter.com/shaps)
-
-## Preview
-
-![Markdown Text Screenshot](Resources/screenshot.jpg)
 
 ## Supported Markdown
 
