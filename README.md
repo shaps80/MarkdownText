@@ -62,6 +62,22 @@ struct ScaledImageStyle: ImageMarkdownStyle {
 }
 ```
 
+Modifiers for styling and visibility can also be placed anywhere in your SwiftUI hierarchy, just as you'd expect:
+
+```
+NavigationView {
+    MarkdownText(markdown)
+}
+// Styling
+.markdownQuoteStyle(.inset)
+.markdownOrderedListBulletStyle(.tinted)
+.markdownImageStyle(.animated)
+
+// Visibility
+.markdownCode(.visible)
+.markdownThematicBreak(.hidden)
+```
+
 ## Demo App
 
 A [MarkdownText Demo](https://github.com/shaps80/MarkdownTextDemo) is also available to better showcase the libraries capabilities.
