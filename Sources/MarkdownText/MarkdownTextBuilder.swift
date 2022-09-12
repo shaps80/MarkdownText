@@ -43,7 +43,6 @@ struct MarkdownTextBuilder: MarkupWalker {
             }
 
             if let link = parent as? Markdown.Link {
-                #warning("Links")
                 /*
                  One idea here could be to collect links like footnotes, reference them in the rendered result as such (at least by default) and then add actual buttons to the bottom of the rendered output?
                  */

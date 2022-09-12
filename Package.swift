@@ -16,9 +16,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
+        .package(url: "https://github.com/shaps80/swift-markdown", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/shaps80/SwiftUIBackports", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -30,3 +29,4 @@ let package = Package(
         ),
     ]
 )
+
