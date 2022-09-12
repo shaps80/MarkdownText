@@ -14,6 +14,10 @@ You can also give me a follow and a 'thanks' anytime.
 
 [![Twitter](https://img.shields.io/badge/Twitter-@shaps-4AC71B)](http://twitter.com/shaps)
 
+## Preview
+
+![Markdown Text Screenshot](Resources/screenshot.jpg)
+
 ## Supported Markdown
 
 - Headings
