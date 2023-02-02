@@ -10,17 +10,6 @@ public protocol ImageMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyImageMarkdownStyle: ImageMarkdownStyle {
-    var label: (Configuration) -> AnyView
-    init<S: ImageMarkdownStyle>(_ style: S) {
-        label = { AnyView(style.makeBody(configuration: $0)) }
-    }
-
-    public func makeBody(configuration: Configuration) -> some View {
-        label(configuration)
-    }
-}
-
 /// The properties of an image markdown element
 public struct ImageMarkdownConfiguration {
     /// The source of the image. Generally either a URL
@@ -74,12 +63,12 @@ public struct ImageMarkdownConfiguration {
 }
 
 private struct ImageMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyImageMarkdownStyle(.automatic)
+    static let defaultValue: any ImageMarkdownStyle = DefaultImageMarkdownStyle()
 }
 
 public extension EnvironmentValues {
     /// The current image markdown style
-    var markdownImageStyle: AnyImageMarkdownStyle {
+    var markdownImageStyle: any ImageMarkdownStyle {
         get { self[ImageMarkdownEnvironmentKey.self] }
         set { self[ImageMarkdownEnvironmentKey.self] = newValue }
     }
@@ -87,7 +76,7 @@ public extension EnvironmentValues {
 
 public extension View {
     /// Sets the style for image markdown elements
-    func markdownImageStyle<S>(_ style: S) -> some View where S: ImageMarkdownStyle {
-        environment(\.markdownImageStyle, AnyImageMarkdownStyle(style))
+    func markdownImageStyle(_ style: some ImageMarkdownStyle) -> some View {
+        environment(\.markdownImageStyle, style)
     }
 }

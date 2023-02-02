@@ -68,32 +68,32 @@ private struct MarkdownContent: View {
             switch elements[index] {
             case let .heading(config):
                 if headingVisibility != .hidden {
-                    headerStyle.makeBody(configuration: config)
+                    AnyView(headerStyle.makeBody(configuration: config))
                 }
             case let .quote(config):
                 if quoteVisibility != .hidden {
-                    quoteStyle.makeBody(configuration: config)
+                    AnyView(quoteStyle.makeBody(configuration: config))
                 }
             case let .code(config):
                 if codeVisibility != .hidden {
-                    codeStyle.makeBody(configuration: config)
+                    AnyView(codeStyle.makeBody(configuration: config))
                 }
             case let .thematicBreak(config):
                 if thematicBreakVisibility != .hidden {
-                    thematicBreak.makeBody(configuration: config)
+                    AnyView(thematicBreak.makeBody(configuration: config))
                 }
             case let .image(config):
                 if imageVisibility != .hidden {
-                    imageStyle.makeBody(configuration: config)
+                    AnyView(imageStyle.makeBody(configuration: config))
                 }
             case let .list(config):
                 if listVisibility != .hidden {
-                    listStyle.makeBody(configuration: config)
+                    AnyView(listStyle.makeBody(configuration: config))
                 }
             case let .paragraph(config):
-                paragraphStyle.makeBody(configuration: config)
+                AnyView(paragraphStyle.makeBody(configuration: config))
             case let .inline(config):
-                inlineStyle.makeBody(configuration: config)
+                AnyView(inlineStyle.makeBody(configuration: config))
             }
         }
     }

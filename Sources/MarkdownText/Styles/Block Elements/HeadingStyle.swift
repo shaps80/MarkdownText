@@ -9,17 +9,6 @@ public protocol HeadingMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyHeadingMarkdownStyle: HeadingMarkdownStyle {
-    var label: (Configuration) -> AnyView
-    init<S: HeadingMarkdownStyle>(_ style: S) {
-        label = { AnyView(style.makeBody(configuration: $0)) }
-    }
-
-    public func makeBody(configuration: Configuration) -> some View {
-        label(configuration)
-    }
-}
-
 /// The properties of a heading markdown element
 public struct HeadingMarkdownConfiguration {
     /// The header level (e.g. `H2` would have a level of `2`)
@@ -83,12 +72,12 @@ public extension HeadingMarkdownStyle where Self == DefaultHeadingMarkdownStyle 
 }
 
 private struct HeadingMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyHeadingMarkdownStyle(.default)
+    static let defaultValue: any HeadingMarkdownStyle = DefaultHeadingMarkdownStyle()
 }
 
 public extension EnvironmentValues {
     /// The current heading markdown style
-    var markdownHeadingStyle: AnyHeadingMarkdownStyle {
+    var markdownHeadingStyle: any HeadingMarkdownStyle {
         get { self[HeadingMarkdownEnvironmentKey.self] }
         set { self[HeadingMarkdownEnvironmentKey.self] = newValue }
     }
@@ -96,7 +85,7 @@ public extension EnvironmentValues {
 
 public extension View {
     /// Sets the style for heading markdown elements
-    func markdownHeadingStyle<S>(_ style: S) -> some View where S: HeadingMarkdownStyle {
-        environment(\.markdownHeadingStyle, AnyHeadingMarkdownStyle(style))
+    func markdownHeadingStyle(_ style: some HeadingMarkdownStyle) -> some View {
+        environment(\.markdownHeadingStyle, style)
     }
 }

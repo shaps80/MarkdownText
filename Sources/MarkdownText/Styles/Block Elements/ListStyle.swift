@@ -44,18 +44,18 @@ public struct ListStyleMarkdownConfiguration {
                     switch markdownList.elements[index] {
                     case let .ordered(config):
                         if orderedListItemVisibility != .hidden {
-                            ordered.makeBody(configuration: config)
+                            AnyView(ordered.makeBody(configuration: config))
                         }
                     case let .unordered(config):
                         if unorderedListItemVisibility != .hidden {
-                            unordered.makeBody(configuration: config)
+                            AnyView(unordered.makeBody(configuration: config))
                         }
                     case let .checklist(config):
                         if checkListItemVisibility != .hidden {
-                            checklist.makeBody(configuration: config)
+                            AnyView(checklist.makeBody(configuration: config))
                         }
                     case let .list(nested):
-                        list.makeBody(configuration: .init(list: nested, level: level + 1))
+                        AnyView(list.makeBody(configuration: .init(list: nested, level: level + 1)))
                     }
                 }
             }

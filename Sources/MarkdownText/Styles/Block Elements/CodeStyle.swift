@@ -9,17 +9,6 @@ public protocol CodeMarkdownStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-public struct AnyCodeMarkdownStyle: CodeMarkdownStyle {
-    var label: (Configuration) -> AnyView
-    init<S: CodeMarkdownStyle>(_ style: S) {
-        label = { AnyView(style.makeBody(configuration: $0)) }
-    }
-
-    public func makeBody(configuration: Configuration) -> some View {
-        label(configuration)
-    }
-}
-
 /// The properties of a code block markdown element
 public struct CodeMarkdownConfiguration {
     /// The raw code for this element
@@ -107,12 +96,12 @@ public extension CodeMarkdownStyle where Self == DefaultCodeMarkdownStyle {
 }
 
 private struct CodeMarkdownEnvironmentKey: EnvironmentKey {
-    static let defaultValue = AnyCodeMarkdownStyle(.default)
+    static let defaultValue: any CodeMarkdownStyle = DefaultCodeMarkdownStyle()
 }
 
 public extension EnvironmentValues {
     /// The current code block markdown style
-    var markdownCodeStyle: AnyCodeMarkdownStyle {
+    var markdownCodeStyle: any CodeMarkdownStyle {
         get { self[CodeMarkdownEnvironmentKey.self] }
         set { self[CodeMarkdownEnvironmentKey.self] = newValue }
     }
@@ -120,7 +109,7 @@ public extension EnvironmentValues {
 
 public extension View {
     /// Sets the style for code block markdown elements
-    func markdownCodeStyle<S>(_ style: S) -> some View where S: CodeMarkdownStyle {
-        environment(\.markdownCodeStyle, AnyCodeMarkdownStyle(style))
+    func markdownCodeStyle(_ style: some CodeMarkdownStyle) -> some View {
+        environment(\.markdownCodeStyle, style)
     }
 }
