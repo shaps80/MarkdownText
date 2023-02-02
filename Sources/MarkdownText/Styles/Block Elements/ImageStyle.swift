@@ -48,7 +48,7 @@ public struct ImageMarkdownConfiguration {
                         .init(content: .init(title ?? source)),
                     ]))
                 } else {
-                    Backport.AsyncImage(url: url, transaction: .init(animation: .default)) { phase in
+                    Backport.AsyncImage(url: url) { phase in
                         switch phase {
                         case let .success(image):
                             image
@@ -60,8 +60,8 @@ public struct ImageMarkdownConfiguration {
                             EmptyView()
                         }
                     }
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
+                    .scaledToFit()
+                    .animation(.default)
                 }
             }
         }
