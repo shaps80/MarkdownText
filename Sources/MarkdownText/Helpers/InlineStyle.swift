@@ -13,7 +13,9 @@ struct InlineMarkdownConfiguration {
 
         var body: some View {
             elements.reduce(into: Text("")) { result, component in
-                if component.attributes.contains(.code) {
+                if component.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    return result = result + Text("\n")
+                } else if component.attributes.contains(.code) {
                     return result = result + code.makeBody(
                         configuration: .init(code: component.content, font: font)
                     )
