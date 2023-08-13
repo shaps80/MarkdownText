@@ -18,35 +18,38 @@ public struct CodeMarkdownConfiguration {
 
     struct Label: View {
         @Environment(\.font) private var font
+        @Environment(\.markdownCodeSyntaxHighlighter) private var markdownCodeSyntaxHighlighter
 
         let code: String
         let language: String?
 
         var body: some View {
+            let text = markdownCodeSyntaxHighlighter
+                    .highlightCode(code.trimmingCharacters(in: .newlines), language: language)
             #if os(macOS)
             if #available(macOS 12, *) {
-                Text(code.trimmingCharacters(in: .newlines))
+                text
                     .font(
                         font?.monospaced()
                         ?? .system(.body, design: .monospaced)
                     )
             } else {
-                Text(code.trimmingCharacters(in: .newlines))
+                text
                     .font(.system(.body, design: .monospaced))
             }
             #elseif os(iOS)
             if #available(iOS 15, *) {
-                Text(code.trimmingCharacters(in: .newlines))
+                text
                     .font(
                         font?.monospaced()
                             ?? .system(.body, design: .monospaced)
                     )
             } else {
-                Text(code.trimmingCharacters(in: .newlines))
+                text
                     .font(.system(.body, design: .monospaced))
             }
             #else
-            Text(code.trimmingCharacters(in: .newlines))
+            text
                 .font(.system(.body, design: .monospaced))
             #endif
         }
